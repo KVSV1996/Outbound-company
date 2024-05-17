@@ -1,0 +1,31 @@
+﻿@using (Html.BeginForm("MakeCall", "Call", FormMethod.Post))
+{
+    <div>
+        <label for="endpoint">Endpoint:</label>
+        <input type="text" id="endpoint" name="endpoint" />
+    </div>
+    <div>
+        <label for="extension">Extension:</label>
+        <input type="text" id="extension" name="extension" />
+    </div>
+    <div>
+        <label for="context">Context:</label>
+        <input type="text" id="context" name="context" />
+    </div>
+    <div>
+        <label for="priority">Priority:</label>
+        <input type="number" id="priority" name="priority" />
+    </div>
+    <div>
+        <label for="callerId">Caller ID:</label>
+        <input type="text" id="callerId" name="callerId" />
+    </div>
+    <button type="submit">Make Call</button>
+}
+
+<div>
+    @if (ViewBag.Message != null)
+    {
+        <p>@ViewBag.Message</p>
+    }
+</div>
