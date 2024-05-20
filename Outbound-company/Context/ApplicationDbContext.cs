@@ -4,24 +4,25 @@ using System.Reflection.Emit;
 
 namespace Outbound_company.Context
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
-        public ApplicationDbContext(DbContextOptions< ApplicationDbContext> options)
-        : base(options)
-    {
-    }
+        public ApplicationDbContext(DbContextOptions< ApplicationDbContext> options):base(options)
+        {
+            //Database.EnsureDeleted();
+            //Database.EnsureCreated();
+        }
 
-        public DbSet<OutboundСompany> OutboundCompanies { get; set; }
+        public DbSet<OutboundCompany> OutboundCompanies { get; set; }
         public DbSet <PhoneNumber> PhoneNumbers { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<OutboundСompany>()
-                .HasMany(c => c.PhoneNumbers)
-                .WithOne(p => p.OutboundCompany)
-                .HasForeignKey(p => p.OutboundCompanyId);
-        }
+        //    modelBuilder.Entity<OutboundCompany>()
+        //        .HasMany(c => c.PhoneNumbers)
+        //        .WithOne(p => p.OutboundCompany)
+        //        .HasForeignKey(p => p.OutboundCompanyId);
+        //}
     }
 }

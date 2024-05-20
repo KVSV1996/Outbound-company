@@ -36,7 +36,6 @@ namespace Outbound_company.Controllers
                     endpoint = endpoint,
                     extension = extension,
                     context = context,
-                    priority = priority,
                     callerId = callerId
                 };
 

@@ -1,0 +1,48 @@
+﻿@model Outbound_company.Models.OutboundCompany
+
+@{
+    ViewData["Title"] = "Create Company";
+}
+
+<h1>Create Company</h1>
+
+<h4>OutboundCompany</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Channel" class="control-label"></label>
+                <input asp-for="Channel" class="form-control" />
+                <span asp-validation-for="Channel" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Extension" class="control-label"></label>
+                <input asp-for="Extension" class="form-control" />
+                <span asp-validation-for="Extension" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Context" class="control-label"></label>
+                <input asp-for="Context" class="form-control" />
+                <span asp-validation-for="Context" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CallerId" class="control-label"></label>
+                <input asp-for="CallerId" class="form-control" />
+                <span asp-validation-for="CallerId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
