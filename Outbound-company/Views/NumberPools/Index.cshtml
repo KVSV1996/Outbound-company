@@ -1,0 +1,32 @@
+﻿@model IEnumerable<Outbound_company.Models.NumberPool>
+
+@{
+    ViewData["Title"] = "Number Pools";
+}
+
+<h1>Number Pools</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Pool</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Number of Phone Numbers</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pool in Model)
+        {
+            <tr>
+                <td>@pool.Name</td>
+                <td>@pool.PhoneNumbers.Count()</td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@pool.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

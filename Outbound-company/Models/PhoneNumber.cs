@@ -6,7 +6,7 @@
         public string Number { get; set; }
 
         // Внешний ключ на OutboundCompany
-        public int OutboundCompanyId { get; set; }
-        public OutboundCompany OutboundCompany { get; set; }
+        public int NumberPoolId { get; set; }
+        public NumberPool NumberPool { get; set; }
     }
 }

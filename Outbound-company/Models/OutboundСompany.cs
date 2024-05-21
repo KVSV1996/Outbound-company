@@ -8,6 +8,7 @@
         public string Extension { get; set; }
         public string Context { get; set; }
         public string CallerId { get; set; }
-       //public List<PhoneNumber> PhoneNumbers { get; set; }
-}
+        public int NumberPoolId { get; set; }
+        public NumberPool NumberPool { get; set; }
+    }
 }

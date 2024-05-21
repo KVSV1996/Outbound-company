@@ -25,7 +25,7 @@ namespace Outbound_company.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Channel,Extension,Context,CallerId")] OutboundCompany outboundCompany)
+        public async Task<IActionResult> Create([Bind("Name,Channel,Extension,Context,CallerId,NumberPoolId")] OutboundCompany outboundCompany)
         {
             if (ModelState.IsValid)
             {
@@ -65,8 +65,6 @@ namespace Outbound_company.Controllers
             }
             return View(outboundCompany);
         }
-
-        // GET: Companies/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
             var outboundCompany = _companiesService.GetCompanyById(id);
@@ -78,7 +76,6 @@ namespace Outbound_company.Controllers
             return View(outboundCompany);
         }
 
-        // POST: Companies/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

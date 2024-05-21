@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using OfficeOpenXml;
 using Outbound_company.Context;
 using Outbound_company.Models;
 using Outbound_company.Repository;
@@ -18,6 +19,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 builder.Services.AddScoped<ICompaniesRepository, CompaniesRepository>();
 builder.Services.AddScoped<ICompaniesService, CompaniesService>();
+builder.Services.AddScoped<INumberRepository, NumberRepository>();
+builder.Services.AddScoped<INumberService, NumberService>();
+
+ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
 var app = builder.Build();
 
@@ -46,5 +51,9 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Companies}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "numberPools",
+    pattern: "{controller=NumberPools}/{action=Index}/{id?}");
 
 app.Run();

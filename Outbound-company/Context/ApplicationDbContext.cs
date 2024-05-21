@@ -13,16 +13,22 @@ namespace Outbound_company.Context
         }
 
         public DbSet<OutboundCompany> OutboundCompanies { get; set; }
+        public DbSet<NumberPool> NumberPools { get; set; }
         public DbSet <PhoneNumber> PhoneNumbers { get; set; }
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-        //    modelBuilder.Entity<OutboundCompany>()
-        //        .HasMany(c => c.PhoneNumbers)
-        //        .WithOne(p => p.OutboundCompany)
-        //        .HasForeignKey(p => p.OutboundCompanyId);
-        //}
+            modelBuilder.Entity<OutboundCompany>()
+                .HasOne(c => c.NumberPool)
+                .WithMany()
+                .HasForeignKey(c => c.NumberPoolId);
+
+            modelBuilder.Entity<NumberPool>()
+                .HasMany(p => p.PhoneNumbers)
+                .WithOne(n => n.NumberPool)
+                .HasForeignKey(n => n.NumberPoolId);
+        }
     }
 }
