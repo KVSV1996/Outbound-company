@@ -35,7 +35,9 @@ namespace Outbound_company.Repository
                 throw new NullReferenceException();
             }
 
-            return context.NumberPools.Find(id);
+            return context.NumberPools
+                .Include(p => p.PhoneNumbers)
+                             .FirstOrDefault(p => p.Id == id);
         }
 
         public void InsertNumberPools(NumberPool numberPool)

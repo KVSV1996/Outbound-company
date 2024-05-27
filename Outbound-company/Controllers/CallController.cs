@@ -20,7 +20,7 @@ namespace Outbound_company.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> MakeCall(string endpoint, string extension, string context, int priority, string callerId)
+        public async Task<ActionResult> MakeCall(string endpoint, string extension, string context, string callerId)
         {
             try
             {

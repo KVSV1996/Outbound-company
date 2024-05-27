@@ -20,10 +20,10 @@ namespace Outbound_company.Context
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<OutboundCompany>()
-                .HasOne(c => c.NumberPool)
-                .WithMany()
-                .HasForeignKey(c => c.NumberPoolId);
+            //modelBuilder.Entity<OutboundCompany>()
+            //    .HasOne(c => c.NumberPool)
+            //    .WithMany()
+            //    .HasForeignKey(c => c.NumberPoolId);
 
             modelBuilder.Entity<NumberPool>()
                 .HasMany(p => p.PhoneNumbers)

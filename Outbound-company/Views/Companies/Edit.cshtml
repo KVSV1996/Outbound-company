@@ -37,6 +37,11 @@
                 <span asp-validation-for="CallerId" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="NumberPoolId" class="control-label"></label>
+                <select asp-for="NumberPoolId" class="form-control" asp-items="ViewBag.NumberPools"></select>
+                <span asp-validation-for="NumberPoolId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>

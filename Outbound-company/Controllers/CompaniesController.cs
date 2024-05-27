@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Outbound_company.Models;
 using Outbound_company.Services;
@@ -9,9 +10,11 @@ namespace Outbound_company.Controllers
     {
 
         private ICompaniesService _companiesService;
-        public CompaniesController(ICompaniesService companiesService)
+        private INumberService _numberService;
+        public CompaniesController(ICompaniesService companiesService, INumberService numberService)
         {
             _companiesService = companiesService ?? throw new ArgumentNullException(nameof(companiesService));
+            _numberService = numberService ?? throw new ArgumentNullException( nameof(numberService));
         }
 
         public async Task<IActionResult> Index()
@@ -20,6 +23,7 @@ namespace Outbound_company.Controllers
         }
         public IActionResult Create()
         {
+            ViewBag.NumberPools = new SelectList(_numberService.GetAllNumberPools(), "Id", "Name");
             return View();
         }
 
@@ -27,12 +31,12 @@ namespace Outbound_company.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Channel,Extension,Context,CallerId,NumberPoolId")] OutboundCompany outboundCompany)
         {
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 _companiesService.InsertCompany(outboundCompany);
                 return RedirectToAction(nameof(Index));
-            }
-            return View(outboundCompany);
+            //}
+            //return View(outboundCompany);
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -42,6 +46,7 @@ namespace Outbound_company.Controllers
             {
                 return NotFound();
             }
+            ViewBag.NumberPools = new SelectList(_numberService.GetAllNumberPools(), "Id", "Name");
             return View(outboundCompany);
         }
 

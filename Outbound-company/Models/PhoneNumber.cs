@@ -1,8 +1,11 @@
-﻿namespace Outbound_company.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Outbound_company.Models
 {
     public class PhoneNumber
     {
         public int Id { get; set; }
+        [Required]
         public string Number { get; set; }
 
         // Внешний ключ на OutboundCompany
