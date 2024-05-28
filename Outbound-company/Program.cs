@@ -5,6 +5,7 @@ using Outbound_company.Context;
 using Outbound_company.Models;
 using Outbound_company.Repository;
 using Outbound_company.Services;
+using Outbound_company.SpeedData;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +31,7 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     dbContext.Database.EnsureCreated();
-    //SeedData.Initialize(dbContext);
+    SpeedData.Initialize(dbContext);
 }
 
 // Configure the HTTP request pipeline.

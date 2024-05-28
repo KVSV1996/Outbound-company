@@ -31,12 +31,12 @@ namespace Outbound_company.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,Channel,Extension,Context,CallerId,NumberPoolId")] OutboundCompany outboundCompany)
         {
-            //if (ModelState.IsValid)
-            //{
+            if (ModelState.IsValid)
+            {
                 _companiesService.InsertCompany(outboundCompany);
                 return RedirectToAction(nameof(Index));
-            //}
-            //return View(outboundCompany);
+            }
+           return View(outboundCompany);
         }
 
         public async Task<IActionResult> Edit(int id)

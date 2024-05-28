@@ -8,6 +8,8 @@ namespace Outbound_company.Context
         DbSet<OutboundCompany> OutboundCompanies { get; set; }
         DbSet<NumberPool> NumberPools { get; set; }
         DbSet<PhoneNumber> PhoneNumbers { get; set; }
+        DbSet<CallStatus> CallStatuses { get; set; }
+        DbSet<CallStatistics> CallStatistics { get; set; }
         int SaveChanges();
     }
 }
