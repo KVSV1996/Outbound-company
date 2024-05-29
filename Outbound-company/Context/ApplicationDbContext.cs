@@ -28,9 +28,9 @@ namespace Outbound_company.Context
                 .HasForeignKey(n => n.NumberPoolId);
 
             modelBuilder.Entity<CallStatistics>()
-            .HasOne(cs => cs.Company)
-            .WithMany()
-            .HasForeignKey(cs => cs.CompanyId);
+                .HasOne(cs => cs.Company)
+                .WithMany()
+                .HasForeignKey(cs => cs.CompanyId);
 
             modelBuilder.Entity<CallStatistics>()
                 .HasOne(cs => cs.PhoneNumber)

@@ -60,7 +60,7 @@ namespace Outbound_company.Controllers
 
                 foreach (var phoneNumber in numberPool.PhoneNumbers)
                 {
-                    var endpoint = $"PJSIP/{phoneNumber.Number}@{company.Channel}";
+                    var endpoint = $"{company.TrunkType}/{phoneNumber.Number}@{company.Channel}";
 
                     var jsonContent = new
                     {

@@ -29,7 +29,7 @@ namespace Outbound_company.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Channel,Extension,Context,CallerId,NumberPoolId")] OutboundCompany outboundCompany)
+        public async Task<IActionResult> Create([Bind("Name,Channel,Extension,Context,CallerId,NumberPoolId,TrunkType")] OutboundCompany outboundCompany)
         {
             if (ModelState.IsValid)
             {

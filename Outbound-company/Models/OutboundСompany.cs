@@ -10,6 +10,8 @@ namespace Outbound_company.Models
         [Required]
         public string Channel { get; set; }
         [Required]
+        public string TrunkType { get; set; }
+        [Required]
         public string Extension { get; set; }
         [Required]
         public string Context { get; set; }
@@ -17,6 +19,5 @@ namespace Outbound_company.Models
         public string CallerId { get; set; }
         [Required]
         public int NumberPoolId { get; set; }
-        //public NumberPool NumberPool { get; set; }
     }
 }
