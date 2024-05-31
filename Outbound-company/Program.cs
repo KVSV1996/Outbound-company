@@ -22,6 +22,9 @@ builder.Services.AddScoped<ICompaniesRepository, CompaniesRepository>();
 builder.Services.AddScoped<ICompaniesService, CompaniesService>();
 builder.Services.AddScoped<INumberRepository, NumberRepository>();
 builder.Services.AddScoped<INumberService, NumberService>();
+builder.Services.AddSingleton<IAsteriskStatusService, AsteriskStatusService>();
+builder.Services.AddHostedService<AsteriskStatusBackgroundService>();
+
 
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 

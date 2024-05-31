@@ -7,6 +7,22 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Outbound_company.styles.css" asp-append-version="true" />
+    <style>
+        .status-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-online {
+            background-color: green;
+        }
+
+        .status-offline {
+            background-color: red;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -29,6 +45,9 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Call" asp-action="Index">Phone</a>
                         </li>
                     </ul>
+                    <div id="asterisk-status" class="ml-auto">
+                        <div id="asterisk-icon" class="status-indicator status-offline"></div> <!-- Значок статуса -->
+                    </div>
                 </div>
             </div>
         </nav>
@@ -47,6 +66,34 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    @RenderSection("Scripts", required: false)
+    <script>
+        $(document).ready(function () {
+            function checkAsteriskStatus() {
+                $.ajax({
+                    url: '@Url.Action("Ping", "Asterisk")',
+                    type: 'GET',
+                    success: function (data) {
+                        console.log(data); // Для отладки
+                        if (data.ping === "pong") {
+                            $('#asterisk-icon').removeClass('status-offline').addClass('status-online');
+                        } else {
+                            $('#asterisk-icon').removeClass('status-online').addClass('status-offline');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error: " + status + " - " + error); // Для отладки
+                        $('#asterisk-icon').removeClass('status-online').addClass('status-offline');
+                    }
+                });
+            }
+
+            // Проверка статуса каждые 5 секунд
+            setInterval(checkAsteriskStatus, 5000);
+
+            // Первоначальная проверка статуса при загрузке страницы
+            checkAsteriskStatus();
+        });
+    </script>
 </body>
 </html>

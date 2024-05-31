@@ -51,7 +51,7 @@ namespace Outbound_company.Controllers
                     return RedirectToAction(nameof(Details), new { id });
                 }
 
-                var requestUri = _asteriskSettings.Url + "/ari/channels";
+                var requestUri = $"http://{_asteriskSettings.Url}/ari/channels";
                 var username = _asteriskSettings.Username;
                 var password = _asteriskSettings.Password;
                 var authToken = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
