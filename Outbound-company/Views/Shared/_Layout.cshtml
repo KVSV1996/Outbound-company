@@ -7,22 +7,6 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Outbound_company.styles.css" asp-append-version="true" />
-    <style>
-        .status-indicator {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-
-        .status-online {
-            background-color: green;
-        }
-
-        .status-offline {
-            background-color: red;
-        }
-    </style>
 </head>
 <body>
     <header>
@@ -46,7 +30,7 @@
                         </li>
                     </ul>
                     <div id="asterisk-status" class="ml-auto">
-                        <div id="asterisk-icon" class="status-indicator status-offline"></div> <!-- Значок статуса -->
+                        <p>Status: <span id="status">@ViewBag.AsteriskStatus</span></p>
                     </div>
                 </div>
             </div>
@@ -66,33 +50,42 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
-            function checkAsteriskStatus() {
+            function updateStatus() {
                 $.ajax({
-                    url: '@Url.Action("Ping", "Asterisk")',
+                    url: '@Url.Action("GetStatus", "Asterisk")',
                     type: 'GET',
                     success: function (data) {
-                        console.log(data); // Для отладки
-                        if (data.ping === "pong") {
-                            $('#asterisk-icon').removeClass('status-offline').addClass('status-online');
-                        } else {
-                            $('#asterisk-icon').removeClass('status-online').addClass('status-offline');
+                        var statusText;
+                        var statusColor;
+                        switch (data.asteriskStatus) {
+                            case 1:
+                                statusText = "Online";
+                                statusColor = "green";
+                                break;
+                            case 2:
+                                statusText = "Offline";
+                                statusColor = "red";
+                                break;
+                            default:
+                                statusText = "Unknown";
+                                statusColor = "black";
+                                break;
                         }
-                    },
-                    error: function (xhr, status, error) {
-                        console.error("Error: " + status + " - " + error); // Для отладки
-                        $('#asterisk-icon').removeClass('status-online').addClass('status-offline');
+                        console.log('Response asteriskStatus:', statusText);
+
+                        $('#status').html(statusText).css('color', statusColor).addClass('bold');
                     }
                 });
             }
 
-            // Проверка статуса каждые 5 секунд
-            setInterval(checkAsteriskStatus, 5000);
+            // Обновляем статус каждые 5 секунд
+            setInterval(updateStatus, 1000);
 
-            // Первоначальная проверка статуса при загрузке страницы
-            checkAsteriskStatus();
+            // Начальное обновление
+            updateStatus();
         });
     </script>
 </body>

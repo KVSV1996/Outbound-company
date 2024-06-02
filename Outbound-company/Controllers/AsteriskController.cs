@@ -16,7 +16,11 @@ namespace Outbound_company.Controllers
         public IActionResult GetStatus()
         {
             var status = _asteriskStatusService.GetStatus();
-            return Json(new { status = status.Status.ToString(), lastChecked = status.LastChecked });
+            var result = new
+            {
+                AsteriskStatus = status.Status
+            };
+            return Json(result);
         }
     }
 }

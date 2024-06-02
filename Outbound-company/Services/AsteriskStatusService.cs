@@ -46,8 +46,6 @@ namespace Outbound_company.Services
             {
                 _statusModel.Status = AsteriskStatus.Offline;
             }
-
-            _statusModel.LastChecked = DateTime.UtcNow;
         }
 
         public AsteriskStatusModel GetStatus()
