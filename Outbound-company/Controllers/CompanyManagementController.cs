@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Outbound_company.Models;
-using Outbound_company.Services;
+using Outbound_company.Services.Interfaces;
 using System.Net.Http.Headers;
 using System.Text;
 

@@ -3,6 +3,7 @@ using Outbound_company.Models.Enums;
 using Outbound_company.Models;
 using System.Net.Http.Headers;
 using System.Text;
+using Outbound_company.Services.Interfaces;
 
 namespace Outbound_company.Services
 {

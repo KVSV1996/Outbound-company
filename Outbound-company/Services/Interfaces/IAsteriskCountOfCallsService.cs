@@ -1,4 +1,4 @@
-﻿namespace Outbound_company.Services
+﻿namespace Outbound_company.Services.Interfaces
 {
     public interface IAsteriskCountOfCallsService
     {

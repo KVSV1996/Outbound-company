@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Outbound_company.Services;
+using Outbound_company.Services.Interfaces;
 
 namespace Outbound_company.Controllers
 {

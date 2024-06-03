@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using Outbound_company.Services.Interfaces;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

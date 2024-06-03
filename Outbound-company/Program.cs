@@ -5,6 +5,7 @@ using Outbound_company.Context;
 using Outbound_company.Models;
 using Outbound_company.Repository;
 using Outbound_company.Services;
+using Outbound_company.Services.Interfaces;
 using Outbound_company.SpeedData;
 
 
