@@ -9,16 +9,18 @@ namespace Outbound_company.Controllers
 {
     public class CompanyManagementController : Controller
     {
+        private readonly IAsteriskCountOfCallsService _countOfCallsService;
         private readonly ICompaniesService _companiesService;
         private readonly AsteriskSettings _asteriskSettings;
         private readonly INumberService _numberService;
         private static readonly HttpClient client = new HttpClient();
 
-        public CompanyManagementController(ICompaniesService companiesService, INumberService numberService, IOptions<AsteriskSettings> asteriskSettings)
+        public CompanyManagementController(ICompaniesService companiesService, INumberService numberService, IOptions<AsteriskSettings> asteriskSettings, IAsteriskCountOfCallsService countOfCallsService)
         {
             _numberService = numberService ?? throw new ArgumentNullException(nameof(numberService));
             _companiesService = companiesService ?? throw new ArgumentNullException(nameof(companiesService));
             _asteriskSettings = asteriskSettings.Value ?? throw new ArgumentNullException(nameof(asteriskSettings.Value));
+            _countOfCallsService = countOfCallsService ?? throw new ArgumentNullException(nameof(countOfCallsService));
         }
 
         public async Task<IActionResult> Details(int id)
@@ -37,7 +39,7 @@ namespace Outbound_company.Controllers
         {
             try
             {
-                var company =  _companiesService.GetCompanyById(id);
+                var company = _companiesService.GetCompanyById(id);
                 if (company == null)
                 {
                     ViewBag.Message = "Company not found.";
@@ -51,32 +53,26 @@ namespace Outbound_company.Controllers
                     return RedirectToAction(nameof(Details), new { id });
                 }
 
-                var requestUri = $"http://{_asteriskSettings.Url}/ari/channels";
-                var username = _asteriskSettings.Username;
-                var password = _asteriskSettings.Password;
-                var authToken = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
-
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
+                var authToken = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_asteriskSettings.Username}:{_asteriskSettings.Password}"));
 
                 foreach (var phoneNumber in numberPool.PhoneNumbers)
                 {
-                    var endpoint = $"{company.TrunkType}/{phoneNumber.Number}@{company.Channel}";
 
-                    var jsonContent = new
+                    int activeCalls = await _countOfCallsService.GetActiveCallsAsync();
+                    const int delay = 5000;
+
+                    while (activeCalls >= 3)
                     {
-                        endpoint = endpoint,
-                        extension = company.Extension,
-                        context = company.Context,
-                        callerId = company.CallerId
-                    };
+                        await Task.Delay(delay);
+                        activeCalls = await _countOfCallsService.GetActiveCallsAsync();
+                    }
 
-                    var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(jsonContent), Encoding.UTF8, "application/json");
+                    var content = CreateRequestContent(company, phoneNumber.Number);
+                    var success = await SendHttpRequestAsync(content, authToken);
 
-                    var response = await client.PostAsync(requestUri, content);
-
-                    if (!response.IsSuccessStatusCode)
+                    if (!success)
                     {
-                        ViewBag.Message = $"Failed to initiate call to {phoneNumber.Number}. Status code: {response.StatusCode}";
+                        ViewBag.Message = $"Failed to initiate call to {phoneNumber.Number}.";
                         break; // Прервать цикл в случае ошибки
                     }
                 }
@@ -89,6 +85,31 @@ namespace Outbound_company.Controllers
             }
 
             return RedirectToAction(nameof(Details), new { id });
+        }
+
+        private StringContent CreateRequestContent(OutboundCompany company, string phoneNumber)
+        {
+            var endpoint = $"{company.TrunkType}/{phoneNumber}@{company.Channel}";
+
+            var jsonContent = new
+            {
+                endpoint = endpoint,
+                extension = company.Extension,
+                context = company.Context,
+                callerId = company.CallerId
+            };
+
+            var content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(jsonContent), Encoding.UTF8, "application/json");
+            return content;
+        }
+
+        private async Task<bool> SendHttpRequestAsync(StringContent content, string authToken)
+        {
+            var requestUri = $"http://{_asteriskSettings.Url}/ari/channels";
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
+
+            var response = await client.PostAsync(requestUri, content);
+            return response.IsSuccessStatusCode;
         }
 
         public async Task<IActionResult> Start(int id)

@@ -24,6 +24,7 @@ builder.Services.AddScoped<INumberRepository, NumberRepository>();
 builder.Services.AddScoped<INumberService, NumberService>();
 builder.Services.AddSingleton<IAsteriskStatusService, AsteriskStatusService>();
 builder.Services.AddHostedService<AsteriskStatusBackgroundService>();
+builder.Services.AddSingleton<IAsteriskCountOfCallsService, AsteriskCountOfCallsService>();
 
 
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
