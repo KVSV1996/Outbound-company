@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Outbound_company.Context;
 using Outbound_company.Models;
+using Outbound_company.Repository.Interface;
 
 namespace Outbound_company.Repository
 {

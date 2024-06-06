@@ -1,6 +1,6 @@
 ﻿using Outbound_company.Models;
 
-namespace Outbound_company.Repository
+namespace Outbound_company.Repository.Interface
 {
     public interface ICompaniesRepository
     {
