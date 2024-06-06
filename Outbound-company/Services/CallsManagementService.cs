@@ -73,7 +73,7 @@ namespace Outbound_company.Services
                 var content = CreateRequestContent(company, phoneNumber.Number);
                 var success = await SendHttpRequestAsync(content);
 
-                await RecordCallStatisticsAsync(company.Id, phoneNumber.Id, success ? 1 : 3);
+                await RecordCallStatisticsAsync(company.Id, phoneNumber.Id, success ? 1 : 2);
 
                 if (!success)
                 {

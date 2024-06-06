@@ -14,7 +14,6 @@ namespace Outbound_company.SpeedData
             {
                 context.CallStatuses.AddRange(
                     new CallStatus { Status = "Successful call" },
-                    new CallStatus { Status = "Call not accepted" },
                     new CallStatus { Status = "Problem when sending HTTP" }
                 );
             }

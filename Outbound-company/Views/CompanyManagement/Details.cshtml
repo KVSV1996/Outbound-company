@@ -50,7 +50,9 @@
     </form>
     <a class="btn btn-info" asp-action="Start" asp-route-id="@Model.Id">Start</a>
     <a class="btn btn-danger" asp-action="Stop" asp-route-id="@Model.Id">Stop</a>
-    <a class="btn btn-secondary" asp-action="DeleteCompanyStatistics" asp-route-id="@Model.Id">Delete statistics</a>
+    @* <a class="btn btn-secondary" asp-action="DeleteCompanyStatistics" asp-route-id="@Model.Id">Delete statistics</a> *@
+    <button class="btn btn-secondary" onclick="confirmDelete(@Model.Id)">Delete statistics</button>
+
 </div>
 
 <!-- Круговой индикатор выполнения -->
@@ -70,20 +72,50 @@
     </div>
 </div>
 
+ <script>
+    function confirmDelete(id) {
+        if (confirm("Are you sure you want to delete all statistics for this company?")) {
+            window.location.href = '@Url.Action("DeleteCompanyStatistics", "CompanyManagement", new { id = "__id__" })'.replace('__id__', id);
+        }
+    }
+</script> 
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        var percentage = @ViewBag.CompletionPercentage;
-        var fill = document.getElementById('fill');
-        var fillHalf = document.getElementById('fill-half');
-        var maskFull = document.getElementById('mask-full');
+        // Функция для обновления статистики
+        function updateStatistics() {
+            $.ajax({
+                url: '@Url.Action("GetUpdatedStatistics", "CompanyManagement", new { id = Model.Id })',
+                type: 'GET',
+                success: function (data) {
+                    // Обновляем процент выполнения
+                    var percentage = parseFloat(data.completionPercentage);
+                    document.getElementById('percentage').textContent = percentage.toFixed(2) + "%";
+                    var fill = document.getElementById('fill');
+                    var fillHalf = document.getElementById('fill-half');
+                    var maskFull = document.getElementById('mask-full');
 
-        if (percentage > 50) {
-            fillHalf.style.transform = 'rotate(180deg)';
-            fill.style.transform = `rotate(${(percentage - 50) * 3.6}deg)`;
-            maskFull.style.clip = 'rect(auto, auto, auto, auto)';
-        } else {
-            fill.style.transform = `rotate(${percentage * 3.6}deg)`;
-            maskFull.style.clip = 'rect(0px, 60px, 120px, 0px)';
+                    console.log('Response persent:', data.completionPercentage);
+
+                    if (percentage > 50) {
+                        fillHalf.style.transform = 'rotate(180deg)';
+                        fill.style.transform = `rotate(${(percentage - 50) * 3.6}deg)`;
+                        maskFull.style.clip = 'rect(auto, auto, auto, auto)';
+                    } else {
+                        fill.style.transform = `rotate(${percentage * 3.6}deg)`;
+                        maskFull.style.clip = 'rect(0px, 60px, 120px, 0px)';
+                    }
+                },
+                error: function () {
+                    console.error("Error fetching updated statistics.");
+                }
+            });
         }
+
+        // Обновление статистики каждые 5 секунд
+        setInterval(updateStatistics, 1000);
+
+        // Первоначальная проверка статуса при загрузке страницы
+        updateStatistics();
     });
 </script>

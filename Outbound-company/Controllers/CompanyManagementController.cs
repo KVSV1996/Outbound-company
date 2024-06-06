@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Outbound_company.Models;
 using Outbound_company.Services.Interfaces;
@@ -61,10 +62,6 @@ namespace Outbound_company.Controllers
             NumberPool numberPool;
             var company = _companiesService.GetCompanyById(id);
             var latestStatisticByCompanyId = await _callStatisticsService.GetLatestByCompanyIdAsync(id);
-
-            //var fullNumberPool = _numberService.GetById(company.NumberPoolId);
-            //var statNumberPool = await _numberService.GetPhoneNumbersStartingFromAsync(latestStatisticByCompanyId.CompanyId, latestStatisticByCompanyId.PhoneNumberId);
-
             
             if (latestStatisticByCompanyId!=null)
             {
@@ -88,10 +85,37 @@ namespace Outbound_company.Controllers
             _callsManagementService.Stop();
             return RedirectToAction(nameof(Details), new { id });
         }
+
+        [HttpGet]
         public async Task<IActionResult> DeleteCompanyStatistics(int id)
         {
             await _callStatisticsService.DeleteStatysticByCompanyIdAsync(id);
             return RedirectToAction(nameof(Details), new { id });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetUpdatedStatistics(int id)
+        {
+            var company = _companiesService.GetCompanyById(id);
+            if (company == null)
+            {
+                return NotFound();
+            }
+
+            var numberPool = _numberService.GetById(company.NumberPoolId);
+            var totalNumbers = numberPool?.PhoneNumbers?.Count ?? 0;
+
+            var callStatistics = await _callStatisticsService.GetStatysticByCompanyIdAsync(id);
+            var completedCalls = callStatistics?.Count();
+
+            double completionPercentage = totalNumbers > 0 ? ((double)completedCalls / totalNumbers) * 100 : 0;
+
+            return Json(new
+            {
+                CompletionPercentage = completionPercentage.ToString("0.00"),
+                CompletedCalls = completedCalls,
+                TotalNumbers = totalNumbers
+            });
         }
     }
 }
