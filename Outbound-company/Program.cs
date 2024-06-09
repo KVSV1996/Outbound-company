@@ -4,6 +4,7 @@ using OfficeOpenXml;
 using Outbound_company.Context;
 using Outbound_company.Models;
 using Outbound_company.Repository;
+using Outbound_company.Repository.Interface;
 using Outbound_company.Services;
 using Outbound_company.Services.Interfaces;
 using Outbound_company.SpeedData;
@@ -23,10 +24,14 @@ builder.Services.AddScoped<ICompaniesRepository, CompaniesRepository>();
 builder.Services.AddScoped<ICompaniesService, CompaniesService>();
 builder.Services.AddScoped<INumberRepository, NumberRepository>();
 builder.Services.AddScoped<INumberService, NumberService>();
+builder.Services.AddScoped<ICallStatisticsRepository,CallStatisticsRepository>();
+builder.Services.AddScoped<ICallStatisticsService, CallStatisticsService>();
+
 builder.Services.AddSingleton<IAsteriskStatusService, AsteriskStatusService>();
-builder.Services.AddHostedService<AsteriskStatusBackgroundService>();
 builder.Services.AddSingleton<IAsteriskCountOfCallsService, AsteriskCountOfCallsService>();
 builder.Services.AddSingleton<ICallsManagementService, CallsManagementService>();
+
+builder.Services.AddHostedService<AsteriskStatusBackgroundService>();
 
 
 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;

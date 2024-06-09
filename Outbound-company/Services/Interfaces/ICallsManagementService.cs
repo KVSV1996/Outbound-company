@@ -4,7 +4,7 @@ namespace Outbound_company.Services.Interfaces
 {
     public interface ICallsManagementService
     {
-        void Start(OutboundCompany company, NumberPool numberPool);
+        void Start(OutboundCompany company, NumberPool numberPool, int maximumCountOfCalls);
         void Stop();
     }
 }

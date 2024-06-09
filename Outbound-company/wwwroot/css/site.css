@@ -24,3 +24,68 @@ body {
 .bold {
     font-weight: bold;
 }
+
+/*/////////////////////////////////////*/
+.circle-wrap {
+    margin: 20px auto;
+    width: 150px;
+    height: 150px;
+    background: #e6e2e7;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.circle {
+    background: #e6e2e7;
+    border-radius: 50%;
+    height: 120px;
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+    .circle .mask,
+    .circle .fill {
+        width: 120px;
+        height: 120px;
+        position: absolute;
+        border-radius: 50%;
+        clip: rect(0px, 120px, 120px, 60px);
+    }
+
+    .circle .mask {
+        clip: rect(0px, 60px, 120px, 0px);
+    }
+
+        .circle .mask .fill {
+            clip: rect(0px, 60px, 120px, 0px);
+            background-color: #3498db;
+        }
+
+        .circle .mask.full,
+        .circle .mask.half .fill {
+            clip: rect(auto, auto, auto, auto);
+        }
+
+    .circle .circle-inner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: #ffffff;
+        position: absolute;
+        z-index: 1;
+    }
+
+    .circle .percentage {
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+

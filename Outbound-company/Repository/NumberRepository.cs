@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Outbound_company.Context;
 using Outbound_company.Models;
+using Outbound_company.Repository.Interface;
 
 namespace Outbound_company.Repository
 {
@@ -38,6 +39,25 @@ namespace Outbound_company.Repository
             return context.NumberPools
                 .Include(p => p.PhoneNumbers)
                              .FirstOrDefault(p => p.Id == id);
+        }
+
+        public async Task<List<PhoneNumber>> GetPhoneNumbersStartingFromAsync(int numberPoolId, int startingPhoneId)
+        {
+            // Найдем номер в пуле с заданным значением
+            var startingPhoneNumber = await context.PhoneNumbers
+                .Where(pn => pn.NumberPoolId == numberPoolId && pn.Id >= startingPhoneId)
+                .FirstOrDefaultAsync();
+
+            if (startingPhoneNumber == null)
+            {
+                // Если начальный номер не найден, возвращаем пустой список
+                return new List<PhoneNumber>();
+            }
+
+            // Возвращаем все номера, начиная с найденного номера и ниже
+            return await context.PhoneNumbers
+                .Where(pn => pn.NumberPoolId == numberPoolId && pn.Id >= startingPhoneNumber.Id)
+                .ToListAsync();
         }
 
         public void InsertNumberPools(NumberPool numberPool)

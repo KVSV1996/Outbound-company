@@ -1,5 +1,5 @@
 ﻿using Outbound_company.Models;
-using Outbound_company.Repository;
+using Outbound_company.Repository.Interface;
 using Outbound_company.Services.Interfaces;
 
 namespace Outbound_company.Services
@@ -15,6 +15,8 @@ namespace Outbound_company.Services
         public IEnumerable<NumberPool> GetAllNumberPools() => _numberRepository.GetAllNumberPools();
 
         public NumberPool GetById(int id) => _numberRepository.GetById(id);
+
+        public async Task<List<PhoneNumber>> GetPhoneNumbersStartingFromAsync(int numberPoolId, int startingPhoneId) => await _numberRepository.GetPhoneNumbersStartingFromAsync(numberPoolId, startingPhoneId);
 
         public void InsertNumberPools(NumberPool numberPool)
         {
