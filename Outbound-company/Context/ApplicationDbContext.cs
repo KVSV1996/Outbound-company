@@ -17,6 +17,7 @@ namespace Outbound_company.Context
         public DbSet <PhoneNumber> PhoneNumbers { get; set; }
         public DbSet<CallStatus> CallStatuses { get; set; }
         public DbSet<CallStatistics> CallStatistics { get; set; }
+        public DbSet<BlackListNumber> BlackListNumbers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

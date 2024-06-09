@@ -26,6 +26,8 @@ builder.Services.AddScoped<INumberRepository, NumberRepository>();
 builder.Services.AddScoped<INumberService, NumberService>();
 builder.Services.AddScoped<ICallStatisticsRepository,CallStatisticsRepository>();
 builder.Services.AddScoped<ICallStatisticsService, CallStatisticsService>();
+builder.Services.AddScoped<IBlackListNumberRepository, BlackListNumberRepository>();
+builder.Services.AddScoped<IBlackListNumberService, BlackListNumberService>();
 
 builder.Services.AddSingleton<IAsteriskStatusService, AsteriskStatusService>();
 builder.Services.AddSingleton<IAsteriskCountOfCallsService, AsteriskCountOfCallsService>();

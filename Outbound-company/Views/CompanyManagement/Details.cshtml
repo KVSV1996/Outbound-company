@@ -48,11 +48,9 @@
     <form asp-action="MakeCall" method="post" style="display:inline;">
         <input type="hidden" name="id" value="@Model.Id" />
     </form>
-    <a class="btn btn-info" asp-action="Start" asp-route-id="@Model.Id">Start</a>
-    <a class="btn btn-danger" asp-action="Stop" asp-route-id="@Model.Id">Stop</a>
-    @* <a class="btn btn-secondary" asp-action="DeleteCompanyStatistics" asp-route-id="@Model.Id">Delete statistics</a> *@
+    <button class="btn btn-info" onclick="startCompany(@Model.Id)">Start</button>
+    <a class="btn btn-danger" onclick="stopCompany(@Model.Id)">Stop</a>
     <button class="btn btn-secondary" onclick="confirmDelete(@Model.Id)">Delete statistics</button>
-
 </div>
 
 <!-- Круговой индикатор выполнения -->
@@ -78,7 +76,21 @@
             window.location.href = '@Url.Action("DeleteCompanyStatistics", "CompanyManagement", new { id = "__id__" })'.replace('__id__', id);
         }
     }
-</script> 
+</script>
+
+<script>
+    function startCompany(id) {
+        alert("Company was started")
+        window.location.href = '@Url.Action("Start", "CompanyManagement", new { id = "__id__" })'.replace('__id__', id);
+    }
+</script>
+
+<script>
+    function stopCompany(id) {
+        alert("Company was stoped")
+        window.location.href = '@Url.Action("Stop", "CompanyManagement", new { id = "__id__" })'.replace('__id__', id);
+    }
+</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {

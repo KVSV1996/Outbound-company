@@ -10,6 +10,7 @@ namespace Outbound_company.Context
         DbSet<PhoneNumber> PhoneNumbers { get; set; }
         DbSet<CallStatus> CallStatuses { get; set; }
         DbSet<CallStatistics> CallStatistics { get; set; }
+        DbSet<BlackListNumber> BlackListNumbers { get; set; }
         int SaveChanges();
     }
 }

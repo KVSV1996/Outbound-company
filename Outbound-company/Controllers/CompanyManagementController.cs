@@ -76,7 +76,7 @@ namespace Outbound_company.Controllers
                 numberPool = _numberService.GetById(company.NumberPoolId); 
             }
             
-            _callsManagementService.Start(company, numberPool, maximumCountOfCalls);
+            _callsManagementService.Start(company, numberPool, int.Parse(_asteriskSettings.MaximumCountOfCalls));
             return RedirectToAction(nameof(Details), new { id });
         }
 

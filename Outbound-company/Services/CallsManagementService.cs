@@ -61,8 +61,8 @@ namespace Outbound_company.Services
                     break;
                 }
 
-                //int activeCalls = await _countOfCallsService.GetActiveCallsAsync();
-                int activeCalls = 1;
+                int activeCalls = await _countOfCallsService.GetActiveCallsAsync();
+                //int activeCalls = 1;
 
                 while (activeCalls >= maximumCountOfCalls)
                 {
@@ -100,7 +100,7 @@ namespace Outbound_company.Services
 
         private async Task<bool> SendHttpRequestAsync(StringContent content)
         {
-            return true;
+           // return true;
             var authToken = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_asteriskSettings.Username}:{_asteriskSettings.Password}"));
             var requestUri = $"http://{_asteriskSettings.Url}/ari/channels";
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);

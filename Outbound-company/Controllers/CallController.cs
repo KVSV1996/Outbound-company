@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using Outbound_company.Models;
 using System.Net.Http.Headers;
 using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Outbound_company.Controllers
 {
@@ -20,20 +21,18 @@ namespace Outbound_company.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> MakeCall(string endpoint, string extension, string context, string callerId)
+        public async Task<ActionResult> MakeCall(string typeOfTrunk, string phoneNumber, string channel, string extension, string context, string callerId)
         {
             try
             {
-                var requestUri = _asteriskSettings.Url+"/ari/channels";
-                var username = _asteriskSettings.Username;
-                var password = _asteriskSettings.Password;
-                var authToken = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{username}:{password}"));
+                var requestUri = $"http://{_asteriskSettings.Url}/ari/channels";
+                var authToken = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_asteriskSettings.Username}:{_asteriskSettings.Password}"));
 
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", authToken);
 
                 var jsonContent = new
                 {
-                    endpoint = endpoint,
+                    endpoint = $"{typeOfTrunk}/{phoneNumber}@{channel}",
                     extension = extension,
                     context = context,
                     callerId = callerId

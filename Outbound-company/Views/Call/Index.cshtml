@@ -1,8 +1,19 @@
 ﻿@using (Html.BeginForm("MakeCall", "Call", FormMethod.Post))
 {
     <div>
-        <label for="endpoint">Endpoint:</label>
-        <input type="text" id="endpoint" name="endpoint" />
+        <label for="typeOfTrunk">Type of trunk:</label>
+        <select id="typeOfTrunk" name="typeOfTrunk" class="form-control">
+            <option value="SIP">SIP</option>
+            <option value="PJSIP">PJSIP</option>
+        </select>
+    </div>
+    <div>
+        <label for="endpoint">Phone number :</label>
+        <input type="text" id="phoneNumber" name="phoneNumber" />
+    </div>
+    <div>
+        <label for="endpoint">Channel:</label>
+        <input type="text" id="channel" name="channel" />
     </div>
     <div>
         <label for="extension">Extension:</label>
@@ -11,10 +22,6 @@
     <div>
         <label for="context">Context:</label>
         <input type="text" id="context" name="context" />
-    </div>
-    <div>
-        <label for="priority">Priority:</label>
-        <input type="number" id="priority" name="priority" />
     </div>
     <div>
         <label for="callerId">Caller ID:</label>
