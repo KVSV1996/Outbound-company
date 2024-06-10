@@ -14,6 +14,7 @@ namespace Outbound_company.SpeedData
             {
                 context.CallStatuses.AddRange(
                     new CallStatus { Status = "Successful call" },
+                    new CallStatus { Status = "Number in Blacklist" },
                     new CallStatus { Status = "Problem when sending HTTP" }
                 );
             }

@@ -17,10 +17,11 @@ namespace Outbound_company.Controllers
         private readonly AsteriskSettings _asteriskSettings;
         private readonly INumberService _numberService;
         private readonly ICallStatisticsService _callStatisticsService;
+        private readonly IBlackListNumberService _blackListNumberService;
         private static readonly HttpClient client = new HttpClient();
-        private const int maximumCountOfCalls = 3;
 
-        public CompanyManagementController(ICallsManagementService callsManagementService, ICompaniesService companiesService, INumberService numberService, IOptions<AsteriskSettings> asteriskSettings, IAsteriskCountOfCallsService countOfCallsService, ICallStatisticsService callStatisticsService)
+
+        public CompanyManagementController(ICallsManagementService callsManagementService, ICompaniesService companiesService, INumberService numberService, IOptions<AsteriskSettings> asteriskSettings, IAsteriskCountOfCallsService countOfCallsService, ICallStatisticsService callStatisticsService, IBlackListNumberService blackListNumberService)
         {
             _numberService = numberService ?? throw new ArgumentNullException(nameof(numberService));
             _companiesService = companiesService ?? throw new ArgumentNullException(nameof(companiesService));
@@ -28,6 +29,7 @@ namespace Outbound_company.Controllers
             _countOfCallsService = countOfCallsService ?? throw new ArgumentNullException(nameof(countOfCallsService));
             _callsManagementService = callsManagementService ?? throw new ArgumentNullException(nameof(callsManagementService));
             _callStatisticsService = callStatisticsService ?? throw new ArgumentNullException(nameof(callStatisticsService));
+            _blackListNumberService = blackListNumberService ?? throw new ArgumentNullException(nameof(blackListNumberService));
         }
 
         public async Task<IActionResult> Details(int id)
@@ -62,7 +64,9 @@ namespace Outbound_company.Controllers
             NumberPool numberPool;
             var company = _companiesService.GetCompanyById(id);
             var latestStatisticByCompanyId = await _callStatisticsService.GetLatestByCompanyIdAsync(id);
-            
+            var blackListNumbers = await _blackListNumberService.GetAllAsync();
+
+
             if (latestStatisticByCompanyId!=null)
             {
                 numberPool = new NumberPool
@@ -76,7 +80,7 @@ namespace Outbound_company.Controllers
                 numberPool = _numberService.GetById(company.NumberPoolId); 
             }
             
-            _callsManagementService.Start(company, numberPool, int.Parse(_asteriskSettings.MaximumCountOfCalls));
+            _callsManagementService.Start(company, numberPool, blackListNumbers, int.Parse(_asteriskSettings.MaximumCountOfCalls));
             return RedirectToAction(nameof(Details), new { id });
         }
 

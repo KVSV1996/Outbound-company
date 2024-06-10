@@ -25,12 +25,13 @@ namespace Outbound_company.Services
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }
 
-        public void Start(OutboundCompany company, NumberPool numberPool, int maximumCountOfCalls)
+        public void Start(OutboundCompany company, NumberPool numberPool, IEnumerable<BlackListNumber> blackListNumber, int maximumCountOfCalls)
         {
-            if (_cts != null) return;
+            _cts = null;
+            //if (_cts != null) return;
 
             _cts = new CancellationTokenSource();
-            _backgroundTask = Task.Run(() => Call(company, numberPool, _cts.Token, maximumCountOfCalls));
+            _backgroundTask = Task.Run(() => Call(company, numberPool, blackListNumber, _cts.Token, maximumCountOfCalls));
         }
 
         public void Stop()
@@ -52,13 +53,19 @@ namespace Outbound_company.Services
             }
         }
 
-        private async Task Call(OutboundCompany company, NumberPool numberPool, CancellationToken cancellationToken, int maximumCountOfCalls)
+        private async Task Call(OutboundCompany company, NumberPool numberPool, IEnumerable<BlackListNumber> blackListNumber, CancellationToken cancellationToken, int maximumCountOfCalls)
         {
             foreach (var phoneNumber in numberPool.PhoneNumbers)
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
                     break;
+                }
+
+                if (blackListNumber.Any(b => b.Number == phoneNumber.Number))
+                {
+                    await RecordCallStatisticsAsync(company.Id, phoneNumber.Id, 2);
+                    continue;
                 }
 
                 int activeCalls = await _countOfCallsService.GetActiveCallsAsync();
@@ -73,7 +80,7 @@ namespace Outbound_company.Services
                 var content = CreateRequestContent(company, phoneNumber.Number);
                 var success = await SendHttpRequestAsync(content);
 
-                await RecordCallStatisticsAsync(company.Id, phoneNumber.Id, success ? 1 : 2);
+                await RecordCallStatisticsAsync(company.Id, phoneNumber.Id, success ? 1 : 3);
 
                 if (!success)
                 {

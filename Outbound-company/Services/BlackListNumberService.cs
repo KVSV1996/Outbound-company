@@ -13,7 +13,8 @@ namespace Outbound_company.Services
             _repository = repository;
         }
 
-        public async Task<IEnumerable<BlackListNumber>> GetAllAsync(int pageNumber, int pageSize) => await _repository.GetAllAsync(pageNumber, pageSize);
+        public async Task<IEnumerable<BlackListNumber>> GetAllByPagAsync(int pageNumber, int pageSize) => await _repository.GetAllByPagAsync(pageNumber, pageSize);
+        public async Task<IEnumerable<BlackListNumber>> GetAllAsync() => await _repository.GetAllAsync();
         public async Task<BlackListNumber> GetByIdAsync(int id) => await _repository.GetByIdAsync(id);
         public async Task AddAsync(BlackListNumber blackListNumber) => await _repository.AddAsync(blackListNumber);
         public async Task UpdateAsync(BlackListNumber blackListNumber) => await _repository.UpdateAsync(blackListNumber);

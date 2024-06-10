@@ -4,7 +4,8 @@ namespace Outbound_company.Services.Interfaces
 {
     public interface IBlackListNumberService
     {
-        Task<IEnumerable<BlackListNumber>> GetAllAsync(int pageNumber, int pageSize);
+        Task<IEnumerable<BlackListNumber>> GetAllByPagAsync(int pageNumber, int pageSize);
+        Task<IEnumerable<BlackListNumber>> GetAllAsync();
         Task<BlackListNumber> GetByIdAsync(int id);
         Task AddAsync(BlackListNumber blackListNumber);
         Task UpdateAsync(BlackListNumber blackListNumber);

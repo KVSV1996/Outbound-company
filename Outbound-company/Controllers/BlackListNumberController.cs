@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Outbound_company.Models;
 using Outbound_company.Services.Interfaces;
+using System.Drawing.Printing;
 
 namespace Outbound_company.Controllers
 {
@@ -17,7 +18,7 @@ namespace Outbound_company.Controllers
         public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
         {
             var totalItems = await _service.GetCountAsync();
-            var blackListNumbers = await _service.GetAllAsync(pageNumber, pageSize);
+            var blackListNumbers = await _service.GetAllByPagAsync(pageNumber, pageSize);
 
             var viewModel = new BlackListNumberViewModel
             {
@@ -57,8 +58,7 @@ namespace Outbound_company.Controllers
             return View(blackListNumber);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+
         public async Task<IActionResult> Edit(BlackListNumber blackListNumber)
         {
             if (ModelState.IsValid)
@@ -80,7 +80,6 @@ namespace Outbound_company.Controllers
         }
 
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _service.DeleteAsync(id);

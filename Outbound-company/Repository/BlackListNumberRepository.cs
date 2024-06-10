@@ -14,12 +14,19 @@ namespace Outbound_company.Repository
             _context = context;
         }
 
-        public async Task<IEnumerable<BlackListNumber>> GetAllAsync(int pageNumber, int pageSize)
+        public async Task<IEnumerable<BlackListNumber>> GetAllByPagAsync(int pageNumber, int pageSize)
         {
             return await _context.BlackListNumbers
                                  .OrderBy(b => b.Id)
                                  .Skip((pageNumber - 1) * pageSize)
                                  .Take(pageSize)
+                                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<BlackListNumber>> GetAllAsync()
+        {
+            return await _context.BlackListNumbers
+                                 .OrderBy(b => b.Id)
                                  .ToListAsync();
         }
 

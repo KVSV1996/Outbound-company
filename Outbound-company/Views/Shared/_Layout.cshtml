@@ -26,6 +26,9 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="NumberPools" asp-action="Index">Pools</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="BlackListNumber" asp-action="Index">Black list</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Call" asp-action="Index">Phone</a>
                         </li>
                     </ul>
@@ -51,6 +54,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @RenderSection("Scripts", required: false)
     <script>
         $(document).ready(function () {
             function updateStatus() {
