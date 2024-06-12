@@ -48,8 +48,8 @@
     <form asp-action="MakeCall" method="post" style="display:inline;">
         <input type="hidden" name="id" value="@Model.Id" />
     </form>
-    <button class="btn btn-info" onclick="startCompany(@Model.Id)">Start</button>
-    <a class="btn btn-danger" onclick="stopCompany(@Model.Id)">Stop</a>
+    <button id="start-button" class="btn btn-info" onclick="startCompany(@Model.Id)">Start</button>
+    <button id="stop-button" class="btn btn-danger" onclick="stopCompany(@Model.Id)">Stop</button>
     <button class="btn btn-secondary" onclick="confirmDelete(@Model.Id)">Delete statistics</button>
 </div>
 
@@ -80,15 +80,15 @@
 
 <script>
     function startCompany(id) {
-        alert("Company was started")
         window.location.href = '@Url.Action("Start", "CompanyManagement", new { id = "__id__" })'.replace('__id__', id);
+        alert("Company was started")
     }
 </script>
 
 <script>
     function stopCompany(id) {
-        alert("Company was stoped")
         window.location.href = '@Url.Action("Stop", "CompanyManagement", new { id = "__id__" })'.replace('__id__', id);
+        alert("Company was stoped")
     }
 </script>
 
@@ -116,6 +116,14 @@
                     } else {
                         fill.style.transform = `rotate(${percentage * 3.6}deg)`;
                         maskFull.style.clip = 'rect(0px, 60px, 120px, 0px)';
+                    }
+
+                    if (percentage >= 100) {
+                        document.getElementById('start-button').disabled = true;
+                        document.getElementById('stop-button').disabled = true;
+                    } else {
+                        document.getElementById('start-button').disabled = false;
+                        document.getElementById('stop-button').disabled = false;
                     }
                 },
                 error: function () {

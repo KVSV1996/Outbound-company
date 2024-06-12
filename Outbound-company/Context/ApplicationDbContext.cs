@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Outbound_company.Models;
 using System.Reflection.Emit;
 
 namespace Outbound_company.Context
 {
-    public class ApplicationDbContext : DbContext, IApplicationDbContext
+    public class ApplicationDbContext : DbContext, IApplicationDbContext 
+
     {
         public ApplicationDbContext(DbContextOptions< ApplicationDbContext> options):base(options)
         {
@@ -18,10 +21,34 @@ namespace Outbound_company.Context
         public DbSet<CallStatus> CallStatuses { get; set; }
         public DbSet<CallStatistics> CallStatistics { get; set; }
         public DbSet<BlackListNumber> BlackListNumbers { get; set; }
-
+        public DbSet<User> Users { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<OutboundCompany>()
+            .Property(o => o.Id)
+            .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<NumberPool>()
+                .Property(np => np.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<PhoneNumber>()
+                .Property(pn => pn.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<CallStatus>()
+                .Property(cs => cs.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<CallStatistics>()
+                .Property(cs => cs.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<BlackListNumber>()
+                .Property(bln => bln.Id)
+                .ValueGeneratedOnAdd();
 
             modelBuilder.Entity<NumberPool>()
                 .HasMany(p => p.PhoneNumbers)

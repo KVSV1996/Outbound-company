@@ -15,16 +15,14 @@ namespace Outbound_company.Controllers
             _service = service;
         }
 
-        public async Task<IActionResult> Index(int pageNumber = 1, int pageSize = 10)
+        public async Task<IActionResult> Index()
         {
             var totalItems = await _service.GetCountAsync();
-            var blackListNumbers = await _service.GetAllByPagAsync(pageNumber, pageSize);
+            var blackListNumbers = await _service.GetAllAsync();
 
             var viewModel = new BlackListNumberViewModel
             {
                 BlackListNumbers = blackListNumbers,
-                PageNumber = pageNumber,
-                PageSize = pageSize,
                 TotalItems = totalItems
             };
 
@@ -58,7 +56,7 @@ namespace Outbound_company.Controllers
             return View(blackListNumber);
         }
 
-
+        [HttpPost]
         public async Task<IActionResult> Edit(BlackListNumber blackListNumber)
         {
             if (ModelState.IsValid)

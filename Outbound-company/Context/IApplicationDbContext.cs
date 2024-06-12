@@ -11,6 +11,7 @@ namespace Outbound_company.Context
         DbSet<CallStatus> CallStatuses { get; set; }
         DbSet<CallStatistics> CallStatistics { get; set; }
         DbSet<BlackListNumber> BlackListNumbers { get; set; }
+        DbSet<User> Users { get; set; }
         int SaveChanges();
     }
 }

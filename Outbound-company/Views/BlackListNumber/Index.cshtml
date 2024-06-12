@@ -36,13 +36,3 @@
 </table>
 
 
-<div>
-    @if (Model.PageNumber > 1)
-    {
-        <a asp-action="Index" asp-route-pageNumber="@(Model.PageNumber - 1)" asp-route-pageSize="@Model.PageSize">Previous</a>
-    }
-    @if ((Model.PageNumber * Model.PageSize) < Model.TotalItems)
-    {
-        <a asp-action="Index" asp-route-pageNumber="@(Model.PageNumber + 1)" asp-route-pageSize="@Model.PageSize">Next</a>
-    }
-</div>

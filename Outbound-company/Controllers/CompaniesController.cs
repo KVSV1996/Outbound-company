@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Outbound_company.Models;
@@ -6,6 +7,7 @@ using Outbound_company.Services.Interfaces;
 
 namespace Outbound_company.Controllers
 {
+    [Authorize]
     public class CompaniesController : Controller
     {
 

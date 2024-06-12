@@ -2,7 +2,7 @@
 
 namespace Outbound_company.Models
 {
-    public class LoginViewModel
+    public class RegisterViewModel
     {
         [Required]
         public string Username { get; set; }

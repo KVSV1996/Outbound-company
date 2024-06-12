@@ -1,45 +1,26 @@
-﻿@model Outbound_company.Models.LoginViewModel
+﻿@model LoginViewModel
 
 @{
-    ViewBag.Title = "Login";
+    ViewData["Title"] = "Login";
 }
 
 <h2>Login</h2>
 
-@using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
-    @Html.AntiForgeryToken()
-    <div class="form-group">
-        @Html.LabelFor(m => m.Username, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Username)
-        </div>
+<form asp-action="Login" method="post">
+    <div>
+        <label asp-for="Username">Username</label>
+        <input asp-for="Username" required />
+        <span asp-validation-for="Username" class="text-danger"></span>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-            @Html.ValidationMessageFor(m => m.Password)
-        </div>
+    <div>
+        <label asp-for="Password">Password</label>
+        <input asp-for="Password" type="password" required />
+        <span asp-validation-for="Password" class="text-danger"></span>
     </div>
+    <button type="submit">Login</button>
+    <p>@ViewBag.ErrorMessage</p>
+</form>
 
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <button type="submit" class="btn btn-default">Login</button>
-        </div>
-    </div>
-}
-
-<div>
-    @if (ViewBag.Message != null)
-    {
-        <p>@ViewBag.Message</p>
-    }
-</div>
-
-@section scripts {
-    <script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

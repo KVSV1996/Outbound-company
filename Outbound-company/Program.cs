@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using OfficeOpenXml;
@@ -19,6 +21,19 @@ builder.Services.Configure<AsteriskSettings>(builder.Configuration.GetSection("A
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
 
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+//    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+    });
+
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
 builder.Services.AddScoped<ICompaniesRepository, CompaniesRepository>();
 builder.Services.AddScoped<ICompaniesService, CompaniesService>();
@@ -28,6 +43,8 @@ builder.Services.AddScoped<ICallStatisticsRepository,CallStatisticsRepository>()
 builder.Services.AddScoped<ICallStatisticsService, CallStatisticsService>();
 builder.Services.AddScoped<IBlackListNumberRepository, BlackListNumberRepository>();
 builder.Services.AddScoped<IBlackListNumberService, BlackListNumberService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddSingleton<IAsteriskStatusService, AsteriskStatusService>();
 builder.Services.AddSingleton<IAsteriskCountOfCallsService, AsteriskCountOfCallsService>();
@@ -60,11 +77,16 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Companies}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
+
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Companies}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "numberPools",

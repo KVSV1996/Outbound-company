@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Outbound_company.Context;
 using Outbound_company.Models;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Outbound_company.SpeedData
 {
@@ -18,8 +20,26 @@ namespace Outbound_company.SpeedData
                     new CallStatus { Status = "Problem when sending HTTP" }
                 );
             }
+
+            if (!context.Users.Any())
+            {
+                context.Users.AddRange(
+                    new User { UserName = "Admin", PasswordHash = HashPassword("Admin"), Role = 1 },
+                    new User { UserName = "User", PasswordHash = HashPassword("User"), Role = 0 }
+                );
+            }
+
             context.SaveChanges();
         }
 
+        private static string HashPassword(string password)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                var bytes = Encoding.UTF8.GetBytes(password);
+                var hash = sha256.ComputeHash(bytes);
+                return Convert.ToBase64String(hash);
+            }
+        }
     }
 }
