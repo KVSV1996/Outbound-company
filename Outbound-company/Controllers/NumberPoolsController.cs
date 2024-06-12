@@ -2,10 +2,12 @@
 using Outbound_company.Models;
 using OfficeOpenXml;
 using Outbound_company.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Outbound_company.Controllers
 {
+    [Authorize]
     public class NumberPoolsController : Controller
     {
         private readonly INumberService _numberService;

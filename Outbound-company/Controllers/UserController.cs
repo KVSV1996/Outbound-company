@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Outbound_company.Models;
 using Outbound_company.Services.Interfaces;
@@ -7,6 +8,8 @@ using System.Text;
 
 namespace Outbound_company.Controllers
 {
+    [Authorize]
+    [Authorize(Policy = "AdminOnly")]
     public class UserController : Controller
     {
         private readonly IUserService _userService;

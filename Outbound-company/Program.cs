@@ -21,9 +21,6 @@ builder.Services.Configure<AsteriskSettings>(builder.Configuration.GetSection("A
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
 
-//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
-//    .AddEntityFrameworkStores<ApplicationDbContext>();
-
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
@@ -31,6 +28,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/Account/Logout";
         options.AccessDeniedPath = "/Account/AccessDenied";
     });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+});
 
 builder.Services.AddHttpContextAccessor();
 
@@ -82,11 +84,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Login}/{id?}");
-
-//app.MapControllerRoute(
-//    name: "default",
-//    pattern: "{controller=Companies}/{action=Index}/{id?}");
+    pattern: "{controller=Companies}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "numberPools",

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Outbound_company.Models;
 using System.Net.Http.Headers;
@@ -7,6 +8,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Outbound_company.Controllers
 {
+    [Authorize]
     public class CallController : Controller
     {
         private readonly AsteriskSettings _asteriskSettings;
@@ -15,7 +17,7 @@ namespace Outbound_company.Controllers
         {
             _asteriskSettings = asteriskSettings.Value;
         }
-    public ActionResult Index()
+        public ActionResult Index()
         {
             return View();
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Outbound_company.Models;
@@ -9,6 +10,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Outbound_company.Controllers
 {
+    [Authorize]
     public class CompanyManagementController : Controller
     {
         private readonly ICallsManagementService _callsManagementService;

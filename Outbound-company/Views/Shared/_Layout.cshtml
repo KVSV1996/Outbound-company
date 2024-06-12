@@ -30,7 +30,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Call" asp-action="Index">Phone</a>
                         </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Users</a>
+                            </li>
+                        }
                     </ul>
+                    <div>
+                    <form asp-controller="Account" asp-action="Logout" method="post" class="form-inline">
+                        <button type="submit" class="btn btn-link nav-link text-dark">Logout</button>
+                    </form>
+                    </div>
                     <div id="asterisk-status" class="ml-auto">
                         <p>Status: <span id="status">@ViewBag.AsteriskStatus</span></p>
                     </div>

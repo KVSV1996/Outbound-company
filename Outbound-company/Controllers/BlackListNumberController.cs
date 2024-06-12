@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Outbound_company.Models;
 using Outbound_company.Services.Interfaces;
 using System.Drawing.Printing;
 
 namespace Outbound_company.Controllers
 {
+    [Authorize]
     public class BlackListNumberController : Controller
     {
 
