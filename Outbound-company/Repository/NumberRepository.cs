@@ -64,6 +64,7 @@ namespace Outbound_company.Repository
             }
 
             await context.NumberPools.AddAsync(numberPool);
+            await context.SaveChangesAsync();
         }
 
         public async Task DeleteNumberPoolsAsync(int id)
@@ -75,6 +76,7 @@ namespace Outbound_company.Repository
                 throw new NullReferenceException();
             }
             context.NumberPools.Remove(numberPool);
+            await context.SaveChangesAsync();
         }
 
         public async Task UpdateNumberPoolsAsync(NumberPool numberPool)
@@ -84,6 +86,7 @@ namespace Outbound_company.Repository
                 throw new NullReferenceException();
             }
             context.NumberPools.Update(numberPool);
+            await context.SaveChangesAsync();
         }
 
         public void Save()

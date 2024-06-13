@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Outbound_company.Models;
+using Serilog;
 using System.Net.Http.Headers;
 using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Outbound_company.Controllers
 {
@@ -47,15 +47,19 @@ namespace Outbound_company.Controllers
                 if (response.IsSuccessStatusCode)
                 {
                     ViewBag.Message = "Call initiated successfully!";
+                    Log.Information($"Test call. Call initiated successfully to {phoneNumber} using trunk {typeOfTrunk}/{channel}.");
+
                 }
                 else
                 {
                     ViewBag.Message = $"Failed to initiate call. Status code: {response.StatusCode}";
+                    Log.Warning($"Failed to initiate call to {phoneNumber}. Status code: {response.StatusCode}");
                 }
             }
             catch (Exception ex)
             {
                 ViewBag.Message = $"Error: {ex.Message}";
+                Log.Error(ex, $"Error initiating call to {phoneNumber} using trunk {typeOfTrunk}/{channel}.");
             }
 
             return View("Index");

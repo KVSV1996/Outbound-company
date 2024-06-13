@@ -12,6 +12,7 @@ namespace Outbound_company.Context
         DbSet<CallStatistics> CallStatistics { get; set; }
         DbSet<BlackListNumber> BlackListNumbers { get; set; }
         DbSet<User> Users { get; set; }
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         int SaveChanges();
     }
 }

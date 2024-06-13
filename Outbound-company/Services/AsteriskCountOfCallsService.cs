@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Outbound_company.Models;
 using Outbound_company.Services.Interfaces;
+using Serilog;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -33,6 +34,7 @@ namespace Outbound_company.Services
                 }
                 else
                 {
+                    Log.Error($"Failed to fetch channels: {response.StatusCode}");
                     throw new Exception($"Failed to fetch channels: {response.StatusCode}");
                 }
             }

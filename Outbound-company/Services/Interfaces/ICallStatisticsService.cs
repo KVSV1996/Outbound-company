@@ -1,5 +1,4 @@
 ﻿using Outbound_company.Models;
-using System.Threading.Tasks;
 
 namespace Outbound_company.Services.Interfaces
 {

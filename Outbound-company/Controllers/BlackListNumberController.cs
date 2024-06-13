@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Outbound_company.Models;
 using Outbound_company.Services.Interfaces;
-using System.Drawing.Printing;
+using Serilog;
 
 namespace Outbound_company.Controllers
 {
@@ -43,8 +43,10 @@ namespace Outbound_company.Controllers
             if (ModelState.IsValid)
             {
                 await _service.AddAsync(blackListNumber);
+                Log.Information($"BlackListNumber with number {blackListNumber.Number} created successfully.");
                 return RedirectToAction(nameof(Index));
             }
+            Log.Warning("Failed to create BlackListNumber due to invalid model state.");
             return View(blackListNumber);
         }
 
@@ -53,6 +55,7 @@ namespace Outbound_company.Controllers
             var blackListNumber = await _service.GetByIdAsync(id);
             if (blackListNumber == null)
             {
+                Log.Information($"BlackListNumber with id {id} not found for editing.");
                 return NotFound();
             }
             return View(blackListNumber);
@@ -64,8 +67,10 @@ namespace Outbound_company.Controllers
             if (ModelState.IsValid)
             {
                 await _service.UpdateAsync(blackListNumber);
+                Log.Information($"BlackListNumber with id {blackListNumber.Id} updated successfully.");
                 return RedirectToAction(nameof(Index));
             }
+            Log.Warning($"Failed to update BlackListNumber with id {blackListNumber.Id} due to invalid model state.");
             return View(blackListNumber);
         }
 
@@ -74,6 +79,7 @@ namespace Outbound_company.Controllers
             var blackListNumber = await _service.GetByIdAsync(id);
             if (blackListNumber == null)
             {
+                Log.Warning($"BlackListNumber with id {id} not found for deletion.");
                 return NotFound();
             }
             return View(blackListNumber);
@@ -83,6 +89,7 @@ namespace Outbound_company.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _service.DeleteAsync(id);
+            Log.Information($"BlackListNumber with id {id} deleted successfully.");
             return RedirectToAction(nameof(Index));
         }
     }

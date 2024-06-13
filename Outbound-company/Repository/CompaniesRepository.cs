@@ -47,6 +47,7 @@ namespace Outbound_company.Repository
             }
 
             await context.OutboundCompanies.AddAsync(outboundCompany);
+            await context.SaveChangesAsync();
         }
 
         public async Task DeleteCompanyAsync(int id)
@@ -58,6 +59,7 @@ namespace Outbound_company.Repository
                 throw new NullReferenceException();
             }
             context.OutboundCompanies.Remove(outboundCompany);
+            await context.SaveChangesAsync();
         }
 
         public async Task UpdateCompanyAsync(OutboundCompany outboundCompany)
@@ -67,11 +69,7 @@ namespace Outbound_company.Repository
                 throw new NullReferenceException();
             }
             context.OutboundCompanies.Update(outboundCompany);
-        }
-
-        public void Save()
-        {
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
     }
 }

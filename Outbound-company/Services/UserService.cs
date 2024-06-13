@@ -15,36 +15,16 @@ namespace Outbound_company.Services
             _userRepository = userRepository;
         }
 
-        public async Task<User> GetByIdAsync(int id)
-        {
-            return await _userRepository.GetByIdAsync(id);
-        }
-
-        public async Task<IEnumerable<User>> GetAllAsync()
-        {
-            return await _userRepository.GetAllAsync();
-        }
+        public async Task<User> GetByIdAsync(int id) => await _userRepository.GetByIdAsync(id);
+        public async Task<IEnumerable<User>> GetAllAsync() => await _userRepository.GetAllAsync();
+        public async Task UpdateAsync(User user) => await _userRepository.UpdateAsync(user);
+        public async Task DeleteAsync(int id) => await _userRepository.DeleteAsync(id);
+        public async Task<User> GetByUserNameAsync(string userName) => await _userRepository.GetByUserNameAsync(userName);
 
         public async Task AddAsync(User user)
         {
             user.PasswordHash = HashPassword(user.PasswordHash); // Hash the password before saving
             await _userRepository.AddAsync(user);
-        }
-
-        public async Task UpdateAsync(User user)
-        {
-            //user.PasswordHash = HashPassword(user.PasswordHash); // Hash the password before updating
-            await _userRepository.UpdateAsync(user);
-        }
-
-        public async Task DeleteAsync(int id)
-        {
-            await _userRepository.DeleteAsync(id);
-        }
-
-        public async Task<User> GetByUserNameAsync(string userName)
-        {
-            return await _userRepository.GetByUserNameAsync(userName);
         }
 
         private string HashPassword(string password)

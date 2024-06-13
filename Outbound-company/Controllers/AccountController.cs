@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Outbound_company.Models;
 using Outbound_company.Services.Interfaces;
 using System.Security.Claims;
 using System.Text;
 using System.Security.Cryptography;
+using Serilog;
 
 namespace Outbound_company.Controllers
 {
@@ -32,6 +32,7 @@ namespace Outbound_company.Controllers
         {
             if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password))
             {
+                Log.Warning("Login attempt with empty username or password.");
                 ViewBag.ErrorMessage = "Username and Password are required.";
                 return View();
             }
@@ -50,9 +51,11 @@ namespace Outbound_company.Controllers
 
                 await _httpContextAccessor.HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
+                Log.Information($"User {model.Username} logged in successfully.");
                 return RedirectToAction("Index", "Companies");
             }
 
+            Log.Warning($"Invalid login attempt for user {model.Username}.");
             ViewBag.ErrorMessage = "Invalid username or password.";
             return View();
         }

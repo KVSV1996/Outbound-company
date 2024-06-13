@@ -1,5 +1,4 @@
 ﻿using Outbound_company.Models;
-using Outbound_company.Repository;
 
 namespace Outbound_company.Services.Interfaces
 {

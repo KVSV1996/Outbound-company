@@ -79,6 +79,7 @@ namespace Outbound_company.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _numberService.DeleteNumberPoolsAsync(id);
+            Log.Information($"Number pool with id:{id} has been deleted");
             return RedirectToAction(nameof(Index));
         }
     }

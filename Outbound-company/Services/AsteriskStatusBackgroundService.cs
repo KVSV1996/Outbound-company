@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-using Outbound_company.Services.Interfaces;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Outbound_company.Services.Interfaces;
 
 namespace Outbound_company.Services
 {

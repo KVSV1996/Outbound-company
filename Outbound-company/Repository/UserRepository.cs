@@ -8,7 +8,7 @@ namespace Outbound_company.Repository
     public class UserRepository : IUserRepository
     {
 
-        private readonly ApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
 
         public UserRepository(ApplicationDbContext context)
         {

@@ -9,6 +9,5 @@ namespace Outbound_company.Repository.Interface
         Task InsertCompanyAsync(OutboundCompany outboundCompany);
         Task DeleteCompanyAsync(int id);
         Task UpdateCompanyAsync(OutboundCompany outboundCompany);
-        void Save();
     }
 }

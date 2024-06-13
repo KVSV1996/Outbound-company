@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Outbound_company.Models;
 using Outbound_company.Services.Interfaces;
+using Serilog;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -37,8 +38,10 @@ namespace Outbound_company.Controllers
             if (ModelState.IsValid)
             {
                 await _userService.AddAsync(user);
+                Log.Information($"User {user.UserName} created successfully.");
                 return RedirectToAction(nameof(Index));
             }
+            Log.Warning("Failed to create user. Model state is invalid.");
             return View(user);
         }
 
@@ -47,6 +50,7 @@ namespace Outbound_company.Controllers
             var user = await _userService.GetByIdAsync(id);
             if (user == null)
             {
+                Log.Warning($"User with ID {id} not found.");
                 return NotFound();
             }
             return View(user);
@@ -59,24 +63,24 @@ namespace Outbound_company.Controllers
             var updateUser = await _userService.GetByIdAsync(id);
             if (id != user.Id || updateUser == null)
             {
+                Log.Warning($"User with ID {id} not found or ID mismatch.");
                 return NotFound();
             }
 
             try
             {
-                // Обновляем логин, если он не пуст и отличается от текущего
                 if (!string.IsNullOrEmpty(username) && username != updateUser.UserName)
                 {
                     updateUser.UserName = username;
+                    Log.Information($"Username for user ID {id} updated to {username}.");
                 }
 
-                // Обновляем роль, если она отличается от текущей
                 if (role != updateUser.Role)
                 {
                     updateUser.Role = role;
+                    Log.Information($"Role for user ID {id} updated to {role}.");
                 }
 
-                // Обновляем пароль, если он не пустой
                 if (!string.IsNullOrEmpty(password))
                 {
                     using (var sha256 = SHA256.Create())
@@ -85,6 +89,7 @@ namespace Outbound_company.Controllers
                         var hash = sha256.ComputeHash(bytes);
                         updateUser.PasswordHash = Convert.ToBase64String(hash);
                     }
+                    Log.Information($"Password for user ID {id} updated.");
                 }
 
                 await _userService.UpdateAsync(updateUser);
@@ -93,13 +98,16 @@ namespace Outbound_company.Controllers
             {
                 if (!await UserExists(updateUser.Id))
                 {
+                    Log.Warning($"User with ID {updateUser.Id} not found during update.");
                     return NotFound();
                 }
                 else
                 {
+                    Log.Error($"Concurrency exception occurred while updating user ID {updateUser.Id}.");
                     throw;
                 }
             }
+            Log.Information($"User ID {updateUser.Id} updated successfully.");
             return RedirectToAction(nameof(Index));
 
 
@@ -110,6 +118,7 @@ namespace Outbound_company.Controllers
             var user = await _userService.GetByIdAsync(id);
             if (user == null)
             {
+                Log.Warning($"User with ID {id} not found.");
                 return NotFound();
             }
             return View(user);
@@ -120,6 +129,7 @@ namespace Outbound_company.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _userService.DeleteAsync(id);
+            Log.Information($"User ID {id} deleted successfully.");
             return RedirectToAction(nameof(Index));
         }
 

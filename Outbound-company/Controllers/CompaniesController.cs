@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Outbound_company.Models;
 using Outbound_company.Services.Interfaces;
+using Serilog;
 
 namespace Outbound_company.Controllers
 {
@@ -36,9 +37,11 @@ namespace Outbound_company.Controllers
             if (ModelState.IsValid)
             {
                 await _companiesService.InsertCompanyAsync(outboundCompany);
+                Log.Information($"Company {outboundCompany.Name} created successfully.");
                 return RedirectToAction(nameof(Index));
             }
-           return View(outboundCompany);
+            Log.Warning("Failed to create company due to invalid model state.");
+            return View(outboundCompany);
         }
 
         public async Task<IActionResult> Edit(int id)
@@ -46,6 +49,7 @@ namespace Outbound_company.Controllers
             var outboundCompany = await _companiesService.GetCompanyByIdAsync(id);
             if (outboundCompany == null)
             {
+                Log.Warning($"Company with ID {id} not found.");
                 return NotFound();
             }
             ViewBag.NumberPools = new SelectList(await _numberService.GetAllNumberPoolsAsync(), "Id", "Name");
@@ -63,13 +67,16 @@ namespace Outbound_company.Controllers
                 try
                 {
                     await _companiesService.UpdateCompanyAsync(outboundCompany);
+                    Log.Information($"Company {outboundCompany.Name} updated successfully.");
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
-                     return NotFound();
+                    Log.Error(ex, $"Concurrency error updating company with ID {id}.");
+                    return NotFound();
                 }
                 return RedirectToAction(nameof(Index));
             }
+            Log.Warning($"Failed to update company {outboundCompany.Name} due to invalid model state.");
             return View(outboundCompany);
         }
         public async Task<IActionResult> Delete(int id)
@@ -77,6 +84,7 @@ namespace Outbound_company.Controllers
             var outboundCompany = await _companiesService.GetCompanyByIdAsync(id);
             if (outboundCompany == null)
             {
+                Log.Warning($"Company with ID {id} not found.");
                 return NotFound();
             }
 
@@ -88,6 +96,7 @@ namespace Outbound_company.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _companiesService.DeleteCompanyAsync(id);
+            Log.Information($"Company with ID {id} deleted successfully.");
             return RedirectToAction(nameof(Index));
         }
 

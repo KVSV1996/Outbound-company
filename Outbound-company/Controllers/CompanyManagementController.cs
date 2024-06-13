@@ -1,12 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Outbound_company.Models;
 using Outbound_company.Services.Interfaces;
-using System.Net.Http.Headers;
-using System.Text;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Serilog;
 
 namespace Outbound_company.Controllers
 {
@@ -39,23 +36,23 @@ namespace Outbound_company.Controllers
             var company = await _companiesService.GetCompanyByIdAsync(id);
             if (company == null)
             {
+                Log.Warning($"Company with ID {id} not found.");
                 return NotFound();
             }
 
             var numberPool = await _numberService.GetByIdAsync(company.NumberPoolId);
             var totalNumbers = numberPool?.PhoneNumbers?.Count ?? 0;
 
-            // Получаем количество вызовов для компании
             var callStatistics = await _callStatisticsService.GetStatysticByCompanyIdAsync(id);
             var completedCalls = callStatistics?.Count();
 
-            // Вычисляем процент выполнения
             double completionPercentage = totalNumbers > 0 ? ((double)completedCalls / totalNumbers) * 100 : 0;
 
-            // Передаем данные в ViewBag
             ViewBag.CompletionPercentage = completionPercentage;
             ViewBag.CompletedCalls = completedCalls;
             ViewBag.TotalNumbers = totalNumbers;
+
+            Log.Information($"Company details viewed for company ID {id}.");
 
             return View(company);
         }
@@ -65,6 +62,12 @@ namespace Outbound_company.Controllers
         {
             NumberPool numberPool;
             var company = await _companiesService.GetCompanyByIdAsync(id);
+            if (company == null)
+            {
+                Log.Warning($"Company with ID {id} not found.");
+                return NotFound();
+            }
+
             var latestStatisticByCompanyId = await _callStatisticsService.GetLatestByCompanyIdAsync(id);
             var blackListNumbers = await _blackListNumberService.GetAllAsync();
 
@@ -83,12 +86,14 @@ namespace Outbound_company.Controllers
             }
             
             _callsManagementService.Start(company, numberPool, blackListNumbers, int.Parse(_asteriskSettings.MaximumCountOfCalls));
+            Log.Information($"Started calls for company ID {id}.");
             return RedirectToAction(nameof(Details), new { id });
         }
 
         public async Task<IActionResult> Stop(int id)
         {
             _callsManagementService.Stop();
+            Log.Information($"Stopped calls for company ID {id}.");
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -96,6 +101,7 @@ namespace Outbound_company.Controllers
         public async Task<IActionResult> DeleteCompanyStatistics(int id)
         {
             await _callStatisticsService.DeleteStatysticByCompanyIdAsync(id);
+            Log.Information($"Deleted statistics for company ID {id}.");
             return RedirectToAction(nameof(Details), new { id });
         }
 
@@ -105,6 +111,7 @@ namespace Outbound_company.Controllers
             var company = await _companiesService.GetCompanyByIdAsync(id);
             if (company == null)
             {
+                Log.Warning($"Company with ID {id} not found.");
                 return NotFound();
             }
 
@@ -115,6 +122,8 @@ namespace Outbound_company.Controllers
             var completedCalls = callStatistics?.Count();
 
             double completionPercentage = totalNumbers > 0 ? ((double)completedCalls / totalNumbers) * 100 : 0;
+
+            Log.Information($"Fetched updated statistics for company ID {id}.");
 
             return Json(new
             {

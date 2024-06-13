@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Outbound_company.Context;
+﻿using Outbound_company.Context;
 using Outbound_company.Models;
 using System.Security.Cryptography;
 using System.Text;

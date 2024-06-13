@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Outbound_company.Models;
 using Outbound_company.Repository.Interface;
 using Outbound_company.Services.Interfaces;
+using Serilog;
 using System.Net.Http.Headers;
 using System.Text;
 
@@ -28,8 +28,6 @@ namespace Outbound_company.Services
         public void Start(OutboundCompany company, NumberPool numberPool, IEnumerable<BlackListNumber> blackListNumber, int maximumCountOfCalls)
         {
             _cts = null;
-            //if (_cts != null) return;
-
             _cts = new CancellationTokenSource();
             _backgroundTask = Task.Run(() => Call(company, numberPool, blackListNumber, _cts.Token, maximumCountOfCalls));
         }
@@ -55,10 +53,13 @@ namespace Outbound_company.Services
 
         private async Task Call(OutboundCompany company, NumberPool numberPool, IEnumerable<BlackListNumber> blackListNumber, CancellationToken cancellationToken, int maximumCountOfCalls)
         {
+            Log.Information($"Starting call process for company {company.Id} with {numberPool.PhoneNumbers.Count} numbers in pool.");
+
             foreach (var phoneNumber in numberPool.PhoneNumbers)
             {
                 if (cancellationToken.IsCancellationRequested)
                 {
+                    Log.Information($"Call process for company {company.Id} was cancelled.");
                     break;
                 }
 
@@ -69,7 +70,6 @@ namespace Outbound_company.Services
                 }
 
                 int activeCalls = await _countOfCallsService.GetActiveCallsAsync();
-                //int activeCalls = 1;
 
                 while (activeCalls >= maximumCountOfCalls)
                 {
@@ -84,9 +84,11 @@ namespace Outbound_company.Services
 
                 if (!success)
                 {
+                    Log.Error($"Call to {phoneNumber.Number} failed for company {company.Id}. Aborting call process.");
                     break;
                 }
             }
+            Log.Information($"Completed call process for company {company.Id}.");
         }
 
         private StringContent CreateRequestContent(OutboundCompany company, string phoneNumber)
