@@ -3,6 +3,7 @@ using Outbound_company.Models;
 using OfficeOpenXml;
 using Outbound_company.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Serilog;
 
 
 namespace Outbound_company.Controllers
@@ -17,9 +18,9 @@ namespace Outbound_company.Controllers
             _numberService = numberService ?? throw new ArgumentNullException(nameof(numberService));
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var pools = _numberService.GetAllNumberPools();
+            var pools = await _numberService.GetAllNumberPoolsAsync();
             return View(pools);
         }
 
@@ -53,7 +54,9 @@ namespace Outbound_company.Controllers
                 }
 
                 numberPool.PhoneNumbers = phoneNumbers;
-                _numberService.InsertNumberPools(numberPool);
+                await _numberService.InsertNumberPoolsAsync(numberPool);
+                Log.Information("The number pool has been successfully added");
+
                 return RedirectToAction(nameof(Index));
             }
 
@@ -62,7 +65,7 @@ namespace Outbound_company.Controllers
 
         public async Task<IActionResult> Delete(int id)
         {
-            var numberPool = _numberService.GetById(id);
+            var numberPool = await _numberService.GetByIdAsync(id);
             if (numberPool == null)
             {
                 return NotFound();
@@ -75,7 +78,7 @@ namespace Outbound_company.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _numberService.DeleteNumberPools(id);
+            await _numberService.DeleteNumberPoolsAsync(id);
             return RedirectToAction(nameof(Index));
         }
     }

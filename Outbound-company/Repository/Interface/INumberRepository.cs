@@ -4,12 +4,12 @@ namespace Outbound_company.Repository.Interface
 {
     public interface INumberRepository
     {
-        IEnumerable<NumberPool> GetAllNumberPools();
-        NumberPool GetById(int id);
+        Task<IEnumerable<NumberPool>> GetAllNumberPoolsAsync();
+        Task<NumberPool> GetByIdAsync(int id);
         Task<List<PhoneNumber>> GetPhoneNumbersStartingFromAsync(int numberPoolId, int startingPhoneId);
-        void InsertNumberPools(NumberPool numberPool);
-        void DeleteNumberPools(int id);
-        void UpdateNumberPools(NumberPool numberPool);
+        Task InsertNumberPoolsAsync(NumberPool numberPool);
+        Task DeleteNumberPoolsAsync(int id);
+        Task UpdateNumberPoolsAsync(NumberPool numberPool);
         void Save();
     }
 }

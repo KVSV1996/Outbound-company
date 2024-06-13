@@ -6,27 +6,38 @@ namespace Outbound_company.Services
 {
     public class CompaniesService : ICompaniesService
     {
-        ICompaniesRepository companiesRepository;
+        private readonly ICompaniesRepository companiesRepository;
+
         public CompaniesService(ICompaniesRepository companiesRepository)
         {
             this.companiesRepository = companiesRepository ?? throw new ArgumentNullException(nameof(companiesRepository));
         }
-        public IEnumerable<OutboundCompany> GetAllCompanies() => companiesRepository.GetAllCompanies();
-        public OutboundCompany GetCompanyById(int id) => companiesRepository.GetCompanyById(id);
 
-        public void InsertCompany(OutboundCompany outboundCompany)
+        public async Task<IEnumerable<OutboundCompany>> GetAllCompaniesAsync()
         {
-            companiesRepository.InsertCompany(outboundCompany);
+            return await companiesRepository.GetAllCompaniesAsync();
+        }
+
+        public async Task<OutboundCompany> GetCompanyByIdAsync(int id)
+        {
+            return await companiesRepository.GetCompanyByIdAsync(id);
+        }
+
+        public async Task InsertCompanyAsync(OutboundCompany outboundCompany)
+        {
+            await companiesRepository.InsertCompanyAsync(outboundCompany);
             companiesRepository.Save();
         }
-        public void DeleteCompany(int id)
+
+        public async Task DeleteCompanyAsync(int id)
         {
-            companiesRepository.DeleteCompany(id);
+            await companiesRepository.DeleteCompanyAsync(id);
             companiesRepository.Save();
         }
-        public void UpdateCompany(OutboundCompany outboundCompany)
+
+        public async Task UpdateCompanyAsync(OutboundCompany outboundCompany)
         {
-            companiesRepository.UpdateCompany(outboundCompany);
+            await companiesRepository.UpdateCompanyAsync(outboundCompany);
             companiesRepository.Save();
         }
     }

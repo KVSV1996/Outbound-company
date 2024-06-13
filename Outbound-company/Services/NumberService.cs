@@ -6,33 +6,34 @@ namespace Outbound_company.Services
 {
     public class NumberService : INumberService
     {
-        private INumberRepository _numberRepository;
+        private readonly INumberRepository _numberRepository;
+
         public NumberService(INumberRepository numberRepository)
         {
             _numberRepository = numberRepository ?? throw new ArgumentNullException(nameof(numberRepository));
         }
 
-        public IEnumerable<NumberPool> GetAllNumberPools() => _numberRepository.GetAllNumberPools();
+        public async Task<IEnumerable<NumberPool>> GetAllNumberPoolsAsync() => await _numberRepository.GetAllNumberPoolsAsync();
 
-        public NumberPool GetById(int id) => _numberRepository.GetById(id);
+        public async Task<NumberPool> GetByIdAsync(int id) => await _numberRepository.GetByIdAsync(id);
 
         public async Task<List<PhoneNumber>> GetPhoneNumbersStartingFromAsync(int numberPoolId, int startingPhoneId) => await _numberRepository.GetPhoneNumbersStartingFromAsync(numberPoolId, startingPhoneId);
 
-        public void InsertNumberPools(NumberPool numberPool)
+        public async Task InsertNumberPoolsAsync(NumberPool numberPool)
         {
-            _numberRepository.InsertNumberPools(numberPool);
+            await _numberRepository.InsertNumberPoolsAsync(numberPool);
             _numberRepository.Save();
         }
 
-        public void DeleteNumberPools(int id)
+        public async Task DeleteNumberPoolsAsync(int id)
         {
-            _numberRepository.DeleteNumberPools(id);
+            await _numberRepository.DeleteNumberPoolsAsync(id);
             _numberRepository.Save();
         }
 
-        public void UpdateNumberPools(NumberPool numberPool)
+        public async Task UpdateNumberPoolsAsync(NumberPool numberPool)
         {
-            _numberRepository.UpdateNumberPools(numberPool);
+            await _numberRepository.UpdateNumberPoolsAsync(numberPool);
             _numberRepository.Save();
         }
     }

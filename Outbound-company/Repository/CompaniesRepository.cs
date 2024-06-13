@@ -19,40 +19,39 @@ namespace Outbound_company.Repository
             this.context = context;
         }
 
-        public IEnumerable<OutboundCompany> GetAllCompanies()
-        {
-
-            if (context.OutboundCompanies == null)
-            {
-                throw new NullReferenceException();
-            }
-
-            return context.OutboundCompanies;
-        }
-
-        public OutboundCompany GetCompanyById(int id)
+        public async Task<IEnumerable<OutboundCompany>> GetAllCompaniesAsync()
         {
             if (context.OutboundCompanies == null)
             {
                 throw new NullReferenceException();
             }
 
-            return context.OutboundCompanies.Find(id);
+            return await context.OutboundCompanies.ToListAsync();
         }
 
-        public void InsertCompany(OutboundCompany outboundCompany)
+        public async Task<OutboundCompany> GetCompanyByIdAsync(int id)
+        {
+            if (context.OutboundCompanies == null)
+            {
+                throw new NullReferenceException();
+            }
+
+            return await context.OutboundCompanies.FindAsync(id);
+        }
+
+        public async Task InsertCompanyAsync(OutboundCompany outboundCompany)
         {
             if (outboundCompany == null)
             {
                 throw new NullReferenceException();
             }
 
-            context.OutboundCompanies.Add(outboundCompany);
+            await context.OutboundCompanies.AddAsync(outboundCompany);
         }
 
-        public void DeleteCompany(int id)
+        public async Task DeleteCompanyAsync(int id)
         {
-            OutboundCompany outboundCompany = context.OutboundCompanies.Find(id);
+            OutboundCompany outboundCompany = await context.OutboundCompanies.FindAsync(id);
 
             if (outboundCompany == null)
             {
@@ -61,7 +60,7 @@ namespace Outbound_company.Repository
             context.OutboundCompanies.Remove(outboundCompany);
         }
 
-        public void UpdateCompany(OutboundCompany outboundCompany)
+        public async Task UpdateCompanyAsync(OutboundCompany outboundCompany)
         {
             if (outboundCompany == null)
             {

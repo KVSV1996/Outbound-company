@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using OfficeOpenXml;
 using Outbound_company.Context;
@@ -10,10 +11,18 @@ using Outbound_company.Repository.Interface;
 using Outbound_company.Services;
 using Outbound_company.Services.Interfaces;
 using Outbound_company.SpeedData;
+using Serilog;
+using System.Reflection;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
+var logFilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Logs", "app-.txt");
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.File(logFilePath, rollingInterval: RollingInterval.Day,
+                  outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level}] {Message}{NewLine}{Exception}")
+    .CreateLogger();
 
 builder.Services.AddControllersWithViews();
 
@@ -65,6 +74,24 @@ using (var scope = app.Services.CreateScope())
     dbContext.Database.EnsureCreated();
     SpeedData.Initialize(dbContext);
 }
+
+var lifetime = app.Lifetime;
+
+lifetime.ApplicationStarted.Register(() =>
+{
+    Log.Information("The application has started at {Time}", DateTimeOffset.Now);
+});
+
+lifetime.ApplicationStopping.Register(() =>
+{
+    Log.Information("The application is stopping at {Time}", DateTimeOffset.Now);
+});
+
+lifetime.ApplicationStopped.Register(() =>
+{
+    Log.Information("The application has stopped at {Time}", DateTimeOffset.Now);
+});
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

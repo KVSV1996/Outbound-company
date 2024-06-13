@@ -18,61 +18,57 @@ namespace Outbound_company.Repository
             this.context = context;
         }
 
-        public IEnumerable<NumberPool> GetAllNumberPools()
+        public async Task<IEnumerable<NumberPool>> GetAllNumberPoolsAsync()
         {
-
             if (context.OutboundCompanies == null)
             {
                 throw new NullReferenceException();
             }
 
-            return context.NumberPools.Include(p => p.PhoneNumbers).ToList();
+            return await context.NumberPools.Include(p => p.PhoneNumbers).ToListAsync();
         }
 
-        public NumberPool GetById(int id)
+        public async Task<NumberPool> GetByIdAsync(int id)
         {
             if (context.NumberPools == null)
             {
                 throw new NullReferenceException();
             }
 
-            return context.NumberPools
+            return await context.NumberPools
                 .Include(p => p.PhoneNumbers)
-                             .FirstOrDefault(p => p.Id == id);
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<List<PhoneNumber>> GetPhoneNumbersStartingFromAsync(int numberPoolId, int startingPhoneId)
         {
-            // Найдем номер в пуле с заданным значением
             var startingPhoneNumber = await context.PhoneNumbers
                 .Where(pn => pn.NumberPoolId == numberPoolId && pn.Id >= startingPhoneId)
                 .FirstOrDefaultAsync();
 
             if (startingPhoneNumber == null)
             {
-                // Если начальный номер не найден, возвращаем пустой список
                 return new List<PhoneNumber>();
             }
 
-            // Возвращаем все номера, начиная с найденного номера и ниже
             return await context.PhoneNumbers
                 .Where(pn => pn.NumberPoolId == numberPoolId && pn.Id >= startingPhoneNumber.Id)
                 .ToListAsync();
         }
 
-        public void InsertNumberPools(NumberPool numberPool)
+        public async Task InsertNumberPoolsAsync(NumberPool numberPool)
         {
             if (numberPool == null)
             {
                 throw new NullReferenceException();
             }
 
-            context.NumberPools.Add(numberPool);
+            await context.NumberPools.AddAsync(numberPool);
         }
 
-        public void DeleteNumberPools(int id)
+        public async Task DeleteNumberPoolsAsync(int id)
         {
-            NumberPool numberPool = context.NumberPools.Find(id);
+            NumberPool numberPool = await context.NumberPools.FindAsync(id);
 
             if (numberPool == null)
             {
@@ -81,7 +77,7 @@ namespace Outbound_company.Repository
             context.NumberPools.Remove(numberPool);
         }
 
-        public void UpdateNumberPools(NumberPool numberPool)
+        public async Task UpdateNumberPoolsAsync(NumberPool numberPool)
         {
             if (numberPool == null)
             {

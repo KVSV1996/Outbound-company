@@ -5,11 +5,11 @@ namespace Outbound_company.Services.Interfaces
 {
     public interface ICompaniesService
     {
-        IEnumerable<OutboundCompany> GetAllCompanies();
-        OutboundCompany GetCompanyById(int id);
-        void InsertCompany(OutboundCompany outboundCompany);
-        void DeleteCompany(int id);
-        void UpdateCompany(OutboundCompany outboundCompany);
+        Task<IEnumerable<OutboundCompany>> GetAllCompaniesAsync();
+        Task<OutboundCompany> GetCompanyByIdAsync(int id);
+        Task InsertCompanyAsync(OutboundCompany outboundCompany);
+        Task DeleteCompanyAsync(int id);
+        Task UpdateCompanyAsync(OutboundCompany outboundCompany);
 
     }
 }

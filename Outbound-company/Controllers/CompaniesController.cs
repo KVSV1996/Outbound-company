@@ -21,11 +21,11 @@ namespace Outbound_company.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(_companiesService.GetAllCompanies());
+            return View(await _companiesService.GetAllCompaniesAsync());
         }
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewBag.NumberPools = new SelectList(_numberService.GetAllNumberPools(), "Id", "Name");
+            ViewBag.NumberPools = new SelectList(await _numberService.GetAllNumberPoolsAsync(), "Id", "Name");
             return View();
         }
 
@@ -35,7 +35,7 @@ namespace Outbound_company.Controllers
         {
             if (ModelState.IsValid)
             {
-                _companiesService.InsertCompany(outboundCompany);
+                await _companiesService.InsertCompanyAsync(outboundCompany);
                 return RedirectToAction(nameof(Index));
             }
            return View(outboundCompany);
@@ -43,12 +43,12 @@ namespace Outbound_company.Controllers
 
         public async Task<IActionResult> Edit(int id)
         {
-            var outboundCompany = _companiesService.GetCompanyById(id);
+            var outboundCompany = await _companiesService.GetCompanyByIdAsync(id);
             if (outboundCompany == null)
             {
                 return NotFound();
             }
-            ViewBag.NumberPools = new SelectList(_numberService.GetAllNumberPools(), "Id", "Name");
+            ViewBag.NumberPools = new SelectList(await _numberService.GetAllNumberPoolsAsync(), "Id", "Name");
             return View(outboundCompany);
         }
 
@@ -62,7 +62,7 @@ namespace Outbound_company.Controllers
             {
                 try
                 {
-                    _companiesService.UpdateCompany(outboundCompany);
+                    await _companiesService.UpdateCompanyAsync(outboundCompany);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -74,7 +74,7 @@ namespace Outbound_company.Controllers
         }
         public async Task<IActionResult> Delete(int id)
         {
-            var outboundCompany = _companiesService.GetCompanyById(id);
+            var outboundCompany = await _companiesService.GetCompanyByIdAsync(id);
             if (outboundCompany == null)
             {
                 return NotFound();
@@ -87,7 +87,7 @@ namespace Outbound_company.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            _companiesService.DeleteCompany(id);
+            await _companiesService.DeleteCompanyAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

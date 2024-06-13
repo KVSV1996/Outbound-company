@@ -36,13 +36,13 @@ namespace Outbound_company.Controllers
 
         public async Task<IActionResult> Details(int id)
         {
-            var company = _companiesService.GetCompanyById(id);
+            var company = await _companiesService.GetCompanyByIdAsync(id);
             if (company == null)
             {
                 return NotFound();
             }
 
-            var numberPool = _numberService.GetById(company.NumberPoolId);
+            var numberPool = await _numberService.GetByIdAsync(company.NumberPoolId);
             var totalNumbers = numberPool?.PhoneNumbers?.Count ?? 0;
 
             // Получаем количество вызовов для компании
@@ -64,7 +64,7 @@ namespace Outbound_company.Controllers
         public async Task<IActionResult> Start(int id)
         {
             NumberPool numberPool;
-            var company = _companiesService.GetCompanyById(id);
+            var company = await _companiesService.GetCompanyByIdAsync(id);
             var latestStatisticByCompanyId = await _callStatisticsService.GetLatestByCompanyIdAsync(id);
             var blackListNumbers = await _blackListNumberService.GetAllAsync();
 
@@ -79,7 +79,7 @@ namespace Outbound_company.Controllers
             }
             else
             {
-                numberPool = _numberService.GetById(company.NumberPoolId); 
+                numberPool = await _numberService.GetByIdAsync(company.NumberPoolId); 
             }
             
             _callsManagementService.Start(company, numberPool, blackListNumbers, int.Parse(_asteriskSettings.MaximumCountOfCalls));
@@ -102,13 +102,13 @@ namespace Outbound_company.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUpdatedStatistics(int id)
         {
-            var company = _companiesService.GetCompanyById(id);
+            var company = await _companiesService.GetCompanyByIdAsync(id);
             if (company == null)
             {
                 return NotFound();
             }
 
-            var numberPool = _numberService.GetById(company.NumberPoolId);
+            var numberPool = await _numberService.GetByIdAsync(company.NumberPoolId);
             var totalNumbers = numberPool?.PhoneNumbers?.Count ?? 0;
 
             var callStatistics = await _callStatisticsService.GetStatysticByCompanyIdAsync(id);
